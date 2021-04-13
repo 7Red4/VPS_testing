@@ -42,9 +42,11 @@ function main() {
 }
 
 function init_faceFilter(videoSettings) {
+  const { width, height } = videoElement;
   JEELIZFACEFILTER.init({
-    followZRot: true,
-    videoSettings: { videoElement },
+    videoSettings: {
+      videoElement,
+    },
     canvasId: "jeeFaceFilterCanvas",
     NNCPath: "/neuralNets/", // root of NN_DEFAULT.json file
     maxFacesDetected: 1,
@@ -56,6 +58,11 @@ function init_faceFilter(videoSettings) {
 
       console.log("INFO: JEELIZFACEFILTER IS READY");
       init_threeScene(spec);
+      const el = document.getElementById("jeeFaceFilterCanvas");
+      const aspectRatio = el.width / el.height;
+      console.log(el.width, el.height, aspectRatio);
+      el.width = height * aspectRatio;
+      el.height = height;
     },
 
     // called at each render iteration (drawing loop):
@@ -87,7 +94,7 @@ async function loadBodyPix(e, stream) {
   const streamSetting = stream.getVideoTracks()[0].getSettings();
   const aspectRatio = streamSetting.aspectRatio;
   videoElement.width = streamSetting.width;
-  videoElement.height = videoElement.width / aspectRatio;
+  videoElement.height = streamSetting.height;
 
   net = await bodyPix.load();
   main();
@@ -97,7 +104,7 @@ async function perform() {
   const segmentation = await net.segmentPerson(videoElement);
   const maskBackground = true;
   // Convert the segmentation into a mask to darken the background.
-  const foregroundColor = { r: 255, g: 255, b: 255, a: 255 };
+  const foregroundColor = { r: 255, g: 255, b: 255, a: 0 };
   const backgroundColor = { r: 0, g: 255, b: 0, a: 255 };
   const backgroundDarkeningMask = bodyPix.toMask(segmentation, foregroundColor, backgroundColor);
 

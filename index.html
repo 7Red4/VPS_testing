@@ -52,11 +52,8 @@
       }
 
       .canvas_mask {
-        position: absolute;
-        top: 0;
-        padding: 0;
-        width: 100%;
-        opacity: 1;
+        transform: translate(-50%, -50%) rotateY(180deg) translateZ(-4000px);
+        z-index: 2;
       }
     </style>
   </head>
@@ -64,7 +61,7 @@
   <body>
     <div class="container">
       <canvas id="wtf" class="canvas"></canvas>
-      <canvas id="jeeFaceFilterCanvas" class="canvas_mask"></canvas>
+      <canvas id="jeeFaceFilterCanvas" class="canvas canvas_mask"></canvas>
     </div>
     <video id="videoElement" hidden></video>
 
