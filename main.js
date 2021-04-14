@@ -1,11 +1,26 @@
 // "use strict";
 const canvas = document.getElementById("wtf");
 const ctx = canvas.getContext("2d");
+const BG_IMAGE_CANVAS = document.createElement("canvas");
+BG_IMAGE_CANVAS.width = 640;
+BG_IMAGE_CANVAS.height = 480;
+const BG_IMAGE_CANVAS_CTX = BG_IMAGE_CANVAS.getContext("2d");
+let BG_IMAGE_DATA = null;
 const videoElement = document.getElementById("videoElement");
+const BG_IMAGE = new Image();
+BG_IMAGE.onload = () => {
+  BG_IMAGE_CANVAS_CTX.drawImage(BG_IMAGE, 0, 0);
+  BG_IMAGE_DATA = BG_IMAGE_CANVAS_CTX.getImageData(0, 0, 640, 480);
+};
+BG_IMAGE.src = "background.png";
 let net = null;
 let rendered = false;
 
 let THREECAMERA = null;
+
+const jeeFaceFilterCanvas = document.getElementById("jeeFaceFilterCanvas");
+jeeFaceFilterCanvas.width = window.innerWidth;
+jeeFaceFilterCanvas.height = window.innerHeight;
 
 // callback: launched if a face is detected or lost.
 function detect_callback(faceIndex, isDetected) {
@@ -42,7 +57,6 @@ function main() {
 }
 
 function init_faceFilter(videoSettings) {
-  const { width, height } = videoElement;
   JEELIZFACEFILTER.init({
     videoSettings: {
       videoElement,
@@ -58,11 +72,6 @@ function init_faceFilter(videoSettings) {
 
       console.log("INFO: JEELIZFACEFILTER IS READY");
       init_threeScene(spec);
-      const el = document.getElementById("jeeFaceFilterCanvas");
-      const aspectRatio = el.width / el.height;
-      console.log(el.width, el.height, aspectRatio);
-      el.width = height * aspectRatio;
-      el.height = height;
     },
 
     // called at each render iteration (drawing loop):
@@ -107,16 +116,30 @@ async function perform() {
   const foregroundColor = { r: 255, g: 255, b: 255, a: 0 };
   const backgroundColor = { r: 0, g: 255, b: 0, a: 255 };
   const backgroundDarkeningMask = bodyPix.toMask(segmentation, foregroundColor, backgroundColor);
+  const { width, height } = backgroundDarkeningMask;
+  BG_IMAGE.width = width;
+  BG_IMAGE.height = height;
 
   const opacity = 1;
-  const edgeBlurAmount = 1;
+  const edgeBlurAmount = 0;
   const flipHorizontal = true;
 
   bodyPix.drawMask(canvas, videoElement, backgroundDarkeningMask, opacity, edgeBlurAmount, flipHorizontal);
+  const _IMAGE_DATA = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  colorReplace(_IMAGE_DATA.data);
+  ctx.putImageData(_IMAGE_DATA, 0, 0);
   if (!rendered) {
     document.getElementById("loading").style.display = "none";
   }
   rendered = true;
+}
+
+function colorReplace(data) {
+  for (let i = 0; i < data.length; i += 4) {
+    if (data[i + 1] === 255) {
+      data[i + 3] = 0;
+    }
+  }
 }
 
 startVideoStream();

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html style="overflow: hidden">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -54,11 +54,16 @@
       .canvas_mask {
         transform: translate(-50%, -50%) rotateY(180deg) translateZ(-4000px);
         z-index: 2;
+        opacity: 0.5;
+      }
+
+      #videoElement {
+        position: fixed;
       }
     </style>
   </head>
 
-  <body>
+  <body style="overflow: hidden">
     <div class="container">
       <canvas id="wtf" class="canvas"></canvas>
       <canvas id="jeeFaceFilterCanvas" class="canvas canvas_mask"></canvas>
