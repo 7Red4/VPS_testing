@@ -1,27 +1,25 @@
 // "use strict";
-const canvas = document.getElementById("wtf");
+const canvas = document.getElementById("bgRemove");
 const ctx = canvas.getContext("2d");
-const BG_IMAGE_CANVAS = document.createElement("canvas");
-BG_IMAGE_CANVAS.width = 640;
-BG_IMAGE_CANVAS.height = 480;
-const BG_IMAGE_CANVAS_CTX = BG_IMAGE_CANVAS.getContext("2d");
-let BG_IMAGE_DATA = null;
+const jeeFaceFilterCanvas = document.getElementById("jeeFaceFilterCanvas");
+
 const videoElement = document.getElementById("videoElement");
-const BG_IMAGE = new Image();
-BG_IMAGE.onload = () => {
-  BG_IMAGE_CANVAS_CTX.drawImage(BG_IMAGE, 0, 0);
-  BG_IMAGE_DATA = BG_IMAGE_CANVAS_CTX.getImageData(0, 0, 640, 480);
-};
-BG_IMAGE.src = "background.png";
+
 let net = null;
 let rendered = false;
 let STREAM = null;
 
 let THREECAMERA = null;
 
-const jeeFaceFilterCanvas = document.getElementById("jeeFaceFilterCanvas");
-jeeFaceFilterCanvas.width = window.innerWidth;
-jeeFaceFilterCanvas.height = window.innerHeight;
+function resize() {
+  jeeFaceFilterCanvas.width = window.innerWidth;
+  jeeFaceFilterCanvas.height = window.innerHeight;
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resize();
+
+window.addEventListener("resize", resize);
 
 // callback: launched if a face is detected or lost.
 function detect_callback(faceIndex, isDetected) {
@@ -125,9 +123,6 @@ async function perform() {
   const foregroundColor = { r: 255, g: 255, b: 255, a: 0 };
   const backgroundColor = { r: 0, g: 255, b: 0, a: 255 };
   const backgroundDarkeningMask = bodyPix.toMask(segmentation, foregroundColor, backgroundColor);
-  const { width, height } = backgroundDarkeningMask;
-  BG_IMAGE.width = width;
-  BG_IMAGE.height = height;
 
   const opacity = 1;
   const edgeBlurAmount = 0;
@@ -140,6 +135,7 @@ async function perform() {
   if (!rendered) {
     document.getElementById("loading").classList.add("hide");
     document.getElementById("starting_frame").classList.add("hide");
+    document.getElementById("ui_controlls").classList.remove("hide");
   }
   rendered = true;
 }
