@@ -15,6 +15,7 @@ BG_IMAGE.onload = () => {
 BG_IMAGE.src = "background.png";
 let net = null;
 let rendered = false;
+let STREAM = null;
 
 let THREECAMERA = null;
 
@@ -83,20 +84,28 @@ function init_faceFilter(videoSettings) {
 }
 
 function startVideoStream() {
+  document.getElementById("loading").classList.remove("hide");
+  document.getElementById("load_btn").classList.add("hide");
   navigator.mediaDevices
     .getUserMedia({
       video: true,
       audio: false,
     })
     .then((stream) => {
+      STREAM = stream;
       videoElement.srcObject = stream;
-
-      videoElement.play();
-      videoElement.addEventListener("playing", (e) => loadBodyPix(e, stream));
+      document.getElementById("start_btn").classList.remove("hide");
+      plaVideo();
     })
     .catch((err) => {
       alert(`Following error occured: ${err}`);
     });
+}
+
+function plaVideo() {
+  document.getElementById("start_btn").classList.add("hide");
+  videoElement.play();
+  videoElement.addEventListener("playing", (e) => loadBodyPix(e, STREAM));
 }
 
 async function loadBodyPix(e, stream) {
@@ -129,7 +138,8 @@ async function perform() {
   colorReplace(_IMAGE_DATA.data);
   ctx.putImageData(_IMAGE_DATA, 0, 0);
   if (!rendered) {
-    document.getElementById("loading").style.display = "none";
+    document.getElementById("loading").classList.add("hide");
+    document.getElementById("starting_frame").classList.add("hide");
   }
   rendered = true;
 }
@@ -142,4 +152,4 @@ function colorReplace(data) {
   }
 }
 
-startVideoStream();
+// startVideoStream();
