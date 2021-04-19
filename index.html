@@ -46,8 +46,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background-image: url(background.png);
-        background-size: cover;
+        margin: 0;
       }
 
       .container {
@@ -57,6 +56,9 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        background-image: url(background.png);
+        background-size: cover;
+        background-position: center;
       }
 
       .canvas {
@@ -83,6 +85,88 @@
         display: none !important;
       }
     </style>
+    <style name="loader">
+      .loader {
+        position: relative;
+        margin: 0px auto;
+        width: 100px;
+      }
+
+      .loader:before {
+        content: '';
+        display: block;
+        padding-top: 100%;
+      }
+
+      .circular {
+        -webkit-animation: rotate 2s linear infinite;
+        animation: rotate 2s linear infinite;
+        height: 100%;
+        -webkit-transform-origin: center center;
+        -ms-transform-origin: center center;
+        transform-origin: center center;
+        width: 100%;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin: auto;
+      }
+
+      .path {
+        stroke-dasharray: 1, 200;
+        stroke-dashoffset: 0;
+        -webkit-animation: dash 1.5s ease-in-out infinite;
+        animation: dash 1.5s ease-in-out infinite;
+        stroke-linecap: round;
+        stroke: white;
+      }
+
+      @-webkit-keyframes rotate {
+        100% {
+          -webkit-transform: rotate(360deg);
+          transform: rotate(360deg);
+        }
+      }
+
+      @keyframes rotate {
+        100% {
+          -webkit-transform: rotate(360deg);
+          transform: rotate(360deg);
+        }
+      }
+
+      @-webkit-keyframes dash {
+        0% {
+          stroke-dasharray: 1, 200;
+          stroke-dashoffset: 0;
+        }
+        50% {
+          stroke-dasharray: 89, 200;
+          stroke-dashoffset: -35;
+        }
+        100% {
+          stroke-dasharray: 89, 200;
+          stroke-dashoffset: -124;
+        }
+      }
+
+      @keyframes dash {
+        0% {
+          stroke-dasharray: 1, 200;
+          stroke-dashoffset: 0;
+        }
+        50% {
+          stroke-dasharray: 89, 200;
+          stroke-dashoffset: -35;
+        }
+        100% {
+          stroke-dasharray: 89, 200;
+          stroke-dashoffset: -124;
+        }
+      }
+    </style>
     <style name="ui_controlls">
       #ui_controlls {
         position: fixed;
@@ -93,6 +177,16 @@
         height: 100%;
         display: flex;
         flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+      #loading_circle {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
         align-items: center;
         justify-content: center;
       }
@@ -119,7 +213,7 @@
       }
       #btn_shutter::after {
         display: block;
-        content: "";
+        content: '';
         position: absolute;
         top: 50%;
         left: 50%;
@@ -128,6 +222,32 @@
         height: calc(100% + 3px);
         border: 4px solid #fff;
         border-radius: 100%;
+      }
+      #btn_close {
+        cursor: pointer;
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        width: 48px;
+        height: 48px;
+        z-index: 3;
+      }
+      #btn_close::before,
+      #btn_close::after {
+        display: block;
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 100%;
+        height: 2px;
+        background-color: #fff;
+      }
+      #btn_close::before {
+        transform: translate(-50%, -50%) rotate(45deg);
+      }
+      #btn_close::after {
+        transform: translate(-50%, -50%) rotate(-45deg);
       }
     </style>
   </head>
@@ -140,15 +260,45 @@
     <video id="videoElement" hidden muted playsinline></video>
 
     <div id="starting_frame">
-      <h1 id="loading" class="hide">loading...</h1>
+      <div id="loading" class="hide">
+        <div class="loader">
+          <svg class="circular" viewBox="25 25 50 50">
+            <circle
+              class="path"
+              cx="50"
+              cy="50"
+              r="20"
+              fill="none"
+              stroke-width="2"
+              stroke-miterlimit="10"
+            />
+          </svg>
+        </div>
+      </div>
       <button id="load_btn" onclick="startVideoStream()">載入模組</button>
       <button id="start_btn" class="hide" onclick="plaVideo()">開始</button>
     </div>
 
     <div id="ui_controlls" class="hide">
       <div id="render_picture" class="hide"></div>
-      <div id="loading_circle"></div>
+      <div id="loading_circle" class="hide">
+        <div class="loader">
+          <svg class="circular" viewBox="25 25 50 50">
+            <circle
+              class="path"
+              cx="50"
+              cy="50"
+              r="20"
+              fill="none"
+              stroke-width="2"
+              stroke-miterlimit="10"
+            />
+          </svg>
+        </div>
+      </div>
       <div id="btn_shutter"></div>
+      <div id="btn_close" class="hide"></div>
+      <!-- keep going ui -->
     </div>
 
     <script src="./main.js"></script>
