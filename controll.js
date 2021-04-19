@@ -7,6 +7,15 @@ const SAVE = document.getElementById("btn_save");
 const RENDER_PICTURE = document.getElementById("render_picture");
 const LOADING_CIRCLE = document.getElementById("loading_circle");
 
+const GIF_TEMP = [];
+const gif = new GIF({
+  workers: 2,
+  quality: 10,
+});
+
+const $round = document.querySelector("#percentage .round");
+const roundRadius = Number(document.querySelector("#percentage .round circle").getAttribute("r"));
+
 let GIF_timer = null;
 
 const BG_IMAGE = new Image();
@@ -93,7 +102,18 @@ function hideShutterControlls() {
   hide(document.getElementById("switch_gif_wrapper"));
 }
 
-const getPictureURL = ({ getcanvas } = {}) => {
+function setPercent(per) {
+  function reduceValue(v) {
+    return v > 100 ? reduceValue(v - 100) : v;
+  }
+  const p = reduceValue(per);
+  const roundCircum = 2 * roundRadius * Math.PI;
+  const roundDraw = (p * roundCircum) / 100;
+  $round.style["stroke-dasharray"] = roundDraw + " 999";
+  console.log(p);
+}
+
+const getPictureURL = ({ toGIF, index } = {}) => {
   return new Promise((resolve, reject) => {
     // prepare result canvas to draw
     const result = document.createElement("canvas");
@@ -135,9 +155,12 @@ const getPictureURL = ({ getcanvas } = {}) => {
         context.translate(result.width, 0);
         context.scale(-1, 1);
 
-        console.log({ getcanvas });
-        if (getcanvas) {
-          resolve(result);
+        console.log({ toGIF });
+        if (toGIF) {
+          GIF_TEMP.push(result);
+          if (index === 3) {
+            render_GIF();
+          }
         } else {
           resolve(result.toDataURL("image/png"));
         }
@@ -167,10 +190,7 @@ async function generatePicture() {
 
 async function generateGIF() {
   hideShutterControlls(SHUTTER);
-  const gif = new GIF({
-    workers: 2,
-    quality: 10,
-  });
+
   clearInterval(GIF_timer);
   GIF_timer = null;
   let counter = 0;
@@ -183,29 +203,18 @@ async function generateGIF() {
     clearInterval(GIF_timer);
     GIF_timer = null;
     counter = 0;
+    hide(document.getElementById("percentage"));
   }
 
-  async function add(count) {
-    const index = count / 1000;
-    gif.addFrame(await getPictureURL({ getcanvas: true }));
-
-    if (index === 3) {
-      gif.on("finished", function (blob) {
-        console.log("end");
-        IMAGE_URL = URL.createObjectURL(blob);
-
-        RENDER_PICTURE.style.backgroundImage = `url(${IMAGE_URL})`;
-        SAVE.href = IMAGE_URL;
-        NO_LOADING();
-        showTools();
-      });
-
-      gif.render();
-    }
+  function add(count) {
+    const index = count / 1000 + 1;
+    getPictureURL({ toGIF: true, index });
   }
+
+  show(document.getElementById("percentage"));
 
   GIF_timer = setInterval(() => {
-    console.log(counter);
+    setPercent(counter / 10);
     if (counter === 0 || counter === 1000 || counter === 2000) {
       console.log("GO");
       add(counter);
@@ -214,7 +223,24 @@ async function generateGIF() {
       end();
     }
     counter += 10;
-  }, 10);
+  }, 2);
+}
+
+function render_GIF() {
+  GIF_TEMP.forEach((el) => {
+    gif.addFrame(el);
+  });
+  gif.on("finished", function (blob) {
+    console.log("end");
+    IMAGE_URL = URL.createObjectURL(blob);
+
+    RENDER_PICTURE.style.backgroundImage = `url(${IMAGE_URL})`;
+    SAVE.href = IMAGE_URL;
+    NO_LOADING();
+    showTools();
+  });
+
+  gif.render();
 }
 
 SHUTTER.addEventListener("click", () => {
