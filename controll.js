@@ -1,29 +1,25 @@
 // canvas - bgFilter;
 // jeeFaceFilterCanvas - jeeFaceFilterCanvas;
 console.log(jeeFaceFilterCanvas);
-const SHUTTER = document.getElementById('btn_shutter');
-const CLOSE = document.getElementById('btn_close');
-const RENDER_PICTURE = document.getElementById('render_picture');
-const LOADING_CIRCLE = document.getElementById('loading_circle');
+const SHUTTER = document.getElementById("btn_shutter");
+const CLOSE = document.getElementById("btn_close");
+const SAVE = document.getElementById("btn_save");
+const RENDER_PICTURE = document.getElementById("render_picture");
+const LOADING_CIRCLE = document.getElementById("loading_circle");
 
-const WINDOW_ASPECT_RATIO = window.innerWidth / window.innerHeight;
-
-let BG_IMAGE_ASPECT_RATIO = 0;
+let GIF_timer = null;
 
 const BG_IMAGE = new Image();
-BG_IMAGE.onload = () => {
-  BG_IMAGE_ASPECT_RATIO = BG_IMAGE.width / BG_IMAGE.height;
-};
-BG_IMAGE.src = 'background.png';
+BG_IMAGE.src = "background.png";
 
-let IMAGE_URL = '';
+let IMAGE_URL = "";
 
 function GO_LOADING() {
-  LOADING_CIRCLE.classList.remove('hide');
+  show(LOADING_CIRCLE);
 }
 
 function NO_LOADING() {
-  LOADING_CIRCLE.classList.add('hide');
+  hide(LOADING_CIRCLE);
 }
 
 function drawImageProp(ctx, img, x, y, w, h, offsetX, offsetY) {
@@ -34,8 +30,8 @@ function drawImageProp(ctx, img, x, y, w, h, offsetX, offsetY) {
   }
 
   // default offset is center
-  offsetX = typeof offsetX === 'number' ? offsetX : 0.5;
-  offsetY = typeof offsetY === 'number' ? offsetY : 0.5;
+  offsetX = typeof offsetX === "number" ? offsetX : 0.5;
+  offsetY = typeof offsetY === "number" ? offsetY : 0.5;
 
   // keep bounds [0.0, 1.0]
   if (offsetX < 0) offsetX = 0;
@@ -77,62 +73,166 @@ function drawImageProp(ctx, img, x, y, w, h, offsetX, offsetY) {
   ctx.drawImage(img, cx, cy, cw, ch, x, y, w, h);
 }
 
-function generatePicture() {
-  IMAGE_URL = '';
+function showTools() {
+  show(CLOSE);
+  show(SAVE);
+}
+
+function hideTools() {
+  hide(CLOSE);
+  hide(SAVE);
+}
+
+function showShutterControlls() {
+  show(SHUTTER);
+  show(document.getElementById("switch_gif_wrapper"));
+}
+
+function hideShutterControlls() {
+  hide(SHUTTER);
+  hide(document.getElementById("switch_gif_wrapper"));
+}
+
+const getPictureURL = ({ getcanvas } = {}) => {
+  return new Promise((resolve, reject) => {
+    // prepare result canvas to draw
+    const result = document.createElement("canvas");
+    result.width = window.innerWidth;
+    result.height = window.innerHeight;
+    const context = result.getContext("2d");
+
+    // face filter area to reverse x axis
+    const filterCanvas = document.createElement("canvas");
+    const filterCanvasCtx = filterCanvas.getContext("2d");
+    filterCanvas.width = window.innerWidth;
+    filterCanvas.height = window.innerHeight;
+    filterCanvasCtx.translate(filterCanvas.width, 0);
+    filterCanvasCtx.scale(-1, 1);
+
+    // set face filter image
+    const filterImage = new Image();
+    filterImage.onload = (e) => {
+      setTimeout(() => {
+        // draw reverse image on face filter canvas
+        filterCanvasCtx.drawImage(filterImage, 0, 0);
+
+        // drawing layer by layer & calculating
+
+        // background image
+        drawImageProp(context, BG_IMAGE);
+
+        // cliped body by body-pix
+        drawImageProp(context, canvas);
+
+        // flipX
+        context.translate(result.width, 0);
+        context.scale(-1, 1);
+
+        // face filter
+        drawImageProp(context, jeeFaceFilterCanvas);
+
+        // flipX
+        context.translate(result.width, 0);
+        context.scale(-1, 1);
+
+        console.log({ getcanvas });
+        if (getcanvas) {
+          resolve(result);
+        } else {
+          resolve(result.toDataURL("image/png"));
+        }
+      });
+    };
+
+    filterImage.src = jeeFaceFilterCanvas.toDataURL("image/png");
+  });
+};
+
+async function generatePicture() {
+  IMAGE_URL = "";
   GO_LOADING();
 
   // open render area
-  RENDER_PICTURE.classList.remove('hide');
+  show(RENDER_PICTURE);
+  hideShutterControlls(SHUTTER);
 
-  // prepare result canvas to draw
-  const result = document.createElement('canvas');
-  result.width = window.innerWidth;
-  result.height = window.innerHeight;
-  const context = result.getContext('2d');
+  IMAGE_URL = await getPictureURL();
 
-  // face filter area to reverse x axis
-  const filterCanvas = document.createElement('canvas');
-  const filterCanvasCtx = filterCanvas.getContext('2d');
-  filterCanvas.width = window.innerWidth;
-  filterCanvas.height = window.innerHeight;
-  filterCanvasCtx.translate(filterCanvas.width, 0);
-  filterCanvasCtx.scale(-1, 1);
+  RENDER_PICTURE.style.backgroundImage = `url(${IMAGE_URL})`;
+  SAVE.href = IMAGE_URL;
 
-  // set face filter image
-  const filterImage = new Image();
-  filterImage.onload = (e) => {
-    setTimeout(() => {
-      // draw reverse image on face filter canvas
-      filterCanvasCtx.drawImage(filterImage, 0, 0);
-
-      // drawing layer by layer & calculating
-
-      // background image
-      drawImageProp(context, BG_IMAGE);
-      // cliped body by body-pix
-      drawImageProp(context, canvas);
-      context.translate(result.width, 0);
-      context.scale(-1, 1);
-      // face filter
-      drawImageProp(context, jeeFaceFilterCanvas);
-      context.translate(result.width, 0);
-      context.scale(-1, 1);
-
-      IMAGE_URL = result.toDataURL('image/png');
-
-      RENDER_PICTURE.style.backgroundImage = `url(${IMAGE_URL})`;
-
-      NO_LOADING();
-      CLOSE.classList.remove('hide');
-    });
-  };
-
-  filterImage.src = jeeFaceFilterCanvas.toDataURL('image/png');
+  NO_LOADING();
+  showTools();
 }
 
-SHUTTER.addEventListener('click', generatePicture);
-CLOSE.addEventListener('click', () => {
-  RENDER_PICTURE.style.backgroundImage = 'none';
-  RENDER_PICTURE.classList.add('hide');
-  CLOSE.classList.add('hide');
+async function generateGIF() {
+  hideShutterControlls(SHUTTER);
+  const gif = new GIF({
+    workers: 2,
+    quality: 10,
+  });
+  clearInterval(GIF_timer);
+  GIF_timer = null;
+  let counter = 0;
+
+  function end() {
+    GO_LOADING();
+    show(RENDER_PICTURE);
+    hideShutterControlls(SHUTTER);
+
+    clearInterval(GIF_timer);
+    GIF_timer = null;
+    counter = 0;
+  }
+
+  async function add(count) {
+    const index = count / 1000;
+    gif.addFrame(await getPictureURL({ getcanvas: true }));
+
+    if (index === 3) {
+      gif.on("finished", function (blob) {
+        console.log("end");
+        IMAGE_URL = URL.createObjectURL(blob);
+
+        RENDER_PICTURE.style.backgroundImage = `url(${IMAGE_URL})`;
+        SAVE.href = IMAGE_URL;
+        NO_LOADING();
+        showTools();
+      });
+
+      gif.render();
+    }
+  }
+
+  GIF_timer = setInterval(() => {
+    console.log(counter);
+    if (counter === 0 || counter === 1000 || counter === 2000) {
+      console.log("GO");
+      add(counter);
+    }
+    if (counter >= 2000) {
+      end();
+    }
+    counter += 10;
+  }, 10);
+}
+
+SHUTTER.addEventListener("click", () => {
+  if (document.getElementById("switch_gif").checked) {
+    generateGIF();
+  } else {
+    generatePicture();
+  }
+});
+CLOSE.addEventListener("click", () => {
+  RENDER_PICTURE.style.backgroundImage = "none";
+  hideTools();
+  showShutterControlls();
+  hide(RENDER_PICTURE);
+});
+SAVE.addEventListener("click", () => {
+  SAVE.download = `${Date.now()}`;
+});
+document.getElementById("switch_gif").addEventListener("change", () => {
+  SHUTTER.classList.toggle("gif");
 });

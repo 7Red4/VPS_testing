@@ -11,6 +11,14 @@ let STREAM = null;
 
 let THREECAMERA = null;
 
+function hide(el) {
+  el.classList.add("hide");
+}
+
+function show(el) {
+  el.classList.remove("hide");
+}
+
 function resize() {
   jeeFaceFilterCanvas.width = window.innerWidth;
   jeeFaceFilterCanvas.height = window.innerHeight;
@@ -82,8 +90,8 @@ function init_faceFilter(videoSettings) {
 }
 
 function startVideoStream() {
-  document.getElementById("loading").classList.remove("hide");
-  document.getElementById("load_btn").classList.add("hide");
+  show(document.getElementById("loading"));
+  hide(document.getElementById("load_btn"));
   navigator.mediaDevices
     .getUserMedia({
       video: true,
@@ -92,7 +100,7 @@ function startVideoStream() {
     .then((stream) => {
       STREAM = stream;
       videoElement.srcObject = stream;
-      document.getElementById("start_btn").classList.remove("hide");
+      show(document.getElementById("start_btn"));
       plaVideo();
     })
     .catch((err) => {
@@ -101,7 +109,7 @@ function startVideoStream() {
 }
 
 function plaVideo() {
-  document.getElementById("start_btn").classList.add("hide");
+  hide(document.getElementById("start_btn"));
   videoElement.play();
   videoElement.addEventListener("playing", (e) => loadBodyPix(e, STREAM));
 }
@@ -133,9 +141,9 @@ async function perform() {
   colorReplace(_IMAGE_DATA.data);
   ctx.putImageData(_IMAGE_DATA, 0, 0);
   if (!rendered) {
-    document.getElementById("loading").classList.add("hide");
-    document.getElementById("starting_frame").classList.add("hide");
-    document.getElementById("ui_controlls").classList.remove("hide");
+    hide(document.getElementById("loading"));
+    hide(document.getElementById("starting_frame"));
+    show(document.getElementById("ui_controlls"));
   }
   rendered = true;
 }
