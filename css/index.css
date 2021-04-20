@@ -1,0 +1,59 @@
+#MAIN_WRAP {
+  width: 100%;
+  height: 100%;
+}
+
+#MAIN_WRAP #starting_frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 9;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #000000aa;
+}
+#MAIN_WRAP #loading {
+  color: #fff;
+}
+#MAIN_WRAP #load_btn {
+}
+
+#MAIN_WRAP .container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: url(/background.png);
+  background-size: cover;
+  background-position: center;
+}
+
+#MAIN_WRAP .canvas {
+  height: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 0;
+  transform: translate(-50%, -50%) translateZ(-4000px);
+  transform-style: preserve-3d;
+  opacity: 1;
+}
+
+#MAIN_WRAP .canvas_mask {
+  transform: translate(-50%, -50%) rotateY(180deg) translateZ(-4000px);
+  z-index: 2;
+}
+
+#MAIN_WRAP #videoElement {
+  position: absolute;
+}
+
+#MAIN_WRAP .hide {
+  display: none !important;
+}

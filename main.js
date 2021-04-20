@@ -1,4 +1,6 @@
 // "use strict";
+const MAIN_WRAP = document.getElementById("MAIN_WRAP");
+
 const canvas = document.getElementById("bgRemove");
 const ctx = canvas.getContext("2d");
 const jeeFaceFilterCanvas = document.getElementById("jeeFaceFilterCanvas");
@@ -20,10 +22,10 @@ function show(el) {
 }
 
 function resize() {
-  jeeFaceFilterCanvas.width = window.innerWidth;
-  jeeFaceFilterCanvas.height = window.innerHeight;
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+  jeeFaceFilterCanvas.width = MAIN_WRAP.clientWidth;
+  jeeFaceFilterCanvas.height = MAIN_WRAP.clientHeight;
+  canvas.width = MAIN_WRAP.clientWidth;
+  canvas.height = MAIN_WRAP.clientHeight;
 }
 resize();
 
@@ -50,29 +52,27 @@ function init_threeScene(spec) {
   // threeStuffs.faceObject.add(threeCube);
   // threeCube.position.set(0, 1, 0);
 
-  const light = new THREE.AmbientLight( 0xFFFFFF ); // soft white light
-  threeStuffs.faceObject.add( light );
+  const light = new THREE.AmbientLight(0xffffff); // soft white light
+  threeStuffs.faceObject.add(light);
 
   const loader = new THREE.GLTFLoader();
   loader.load(
     // resource URL
-    './dna.glb',
+    "./dna.glb",
     // called when the resource is loaded
-    function ( gltf ) {
-      threeStuffs.faceObject.add( gltf.scene );
+    function (gltf) {
+      threeStuffs.faceObject.add(gltf.scene);
       gltf.scene.scale.set(10, 10, 10);
       gltf.scene.position.set(0, 0.35, 0);
       window.dna = gltf.scene;
     },
-    function ( xhr ) {
-      console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+    function (xhr) {
+      console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
     },
-    function ( error ) {
-      console.log( 'An error happened' );
+    function (error) {
+      console.log("An error happened");
     }
   );
-
-
 
   //CREATE THE CAMERA
   THREECAMERA = JeelizThreeHelper.create_camera();
@@ -125,7 +125,6 @@ function startVideoStream() {
     .then((stream) => {
       STREAM = stream;
       videoElement.srcObject = stream;
-      show(document.getElementById("start_btn"));
       plaVideo();
     })
     .catch((err) => {
@@ -134,7 +133,6 @@ function startVideoStream() {
 }
 
 function plaVideo() {
-  hide(document.getElementById("start_btn"));
   videoElement.play();
   videoElement.addEventListener("playing", (e) => loadBodyPix(e, STREAM));
 }

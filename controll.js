@@ -117,15 +117,15 @@ const getPictureURL = ({ toGIF, index } = {}) => {
   return new Promise((resolve, reject) => {
     // prepare result canvas to draw
     const result = document.createElement("canvas");
-    result.width = window.innerWidth;
-    result.height = window.innerHeight;
+    result.width = MAIN_WRAP.clientWidth;
+    result.height = MAIN_WRAP.clientHeight;
     const context = result.getContext("2d");
 
     // face filter area to reverse x axis
     const filterCanvas = document.createElement("canvas");
     const filterCanvasCtx = filterCanvas.getContext("2d");
-    filterCanvas.width = window.innerWidth;
-    filterCanvas.height = window.innerHeight;
+    filterCanvas.width = MAIN_WRAP.clientWidth;
+    filterCanvas.height = MAIN_WRAP.clientHeight;
     filterCanvasCtx.translate(filterCanvas.width, 0);
     filterCanvasCtx.scale(-1, 1);
 

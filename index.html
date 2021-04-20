@@ -7,310 +7,20 @@
 
     <title>Face Filter Demo </title>
 
-    <link rel="stylesheet" href="./main.css">
-    <script src="dist/jeelizFaceFilter.js"></script>
-
-    <!-- INCLUDE THREE.JS -->
-    <script src="libs/three/v112/three.min.js"></script>
-    <script src="libs/three/v112/GLTFLoader.js"></script>
-    <!-- INCLUDE JEELIZRESIZER -->
-    <script src="helpers/JeelizResizer.js"></script>
-    <!-- INCLUDE JEELIZ THREE.JS HELPER -->
-    <script src="helpers/JeelizThreeHelper.js"></script>
+    <script src="/dist/jeelizFaceFilter.js"></script>
+    <script src="/libs/three/v112/three.min.js"></script>
+    <script src="/libs/three/v112/GLTFLoader.js"></script>
+    <script src="/helpers/JeelizResizer.js"></script>
+    <script src="/helpers/JeelizThreeHelper.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.2"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/body-pix@2.0"></script>
-    <style>
-      #starting_frame {
-        position: fixed;
-        top: 0;
-        left: 0;
-        z-index: 9;
-        width: 100%;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        background-color: #000000aa;
-      }
-      #loading {
-        color: #fff;
-      }
-      #load_btn {
-      }
-
-      html {
-        height: 100%;
-      }
-
-      body {
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0;
-      }
-
-      .container {
-        position: relative;
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-image: url(background.png);
-        background-size: cover;
-        background-position: center;
-      }
-
-      .canvas {
-        height: 100%;
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        z-index: 0;
-        transform: translate(-50%, -50%) translateZ(-4000px);
-        transform-style: preserve-3d;
-        opacity: 1;
-      }
-
-      .canvas_mask {
-        transform: translate(-50%, -50%) rotateY(180deg) translateZ(-4000px);
-        z-index: 2;
-      }
-
-      #videoElement {
-        position: fixed;
-      }
-
-      .hide {
-        display: none !important;
-      }
-    </style>
-    <style name="loader">
-      .loader {
-        position: relative;
-        margin: 0px auto;
-        width: 100px;
-      }
-
-      .loader:before {
-        content: "";
-        display: block;
-        padding-top: 100%;
-      }
-
-      .circular {
-        -webkit-animation: rotate 2s linear infinite;
-        animation: rotate 2s linear infinite;
-        height: 100%;
-        -webkit-transform-origin: center center;
-        -ms-transform-origin: center center;
-        transform-origin: center center;
-        width: 100%;
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        margin: auto;
-      }
-
-      .path {
-        stroke-dasharray: 1, 200;
-        stroke-dashoffset: 0;
-        -webkit-animation: dash 1.5s ease-in-out infinite;
-        animation: dash 1.5s ease-in-out infinite;
-        stroke-linecap: round;
-        stroke: white;
-      }
-
-      @-webkit-keyframes rotate {
-        100% {
-          -webkit-transform: rotate(360deg);
-          transform: rotate(360deg);
-        }
-      }
-
-      @keyframes rotate {
-        100% {
-          -webkit-transform: rotate(360deg);
-          transform: rotate(360deg);
-        }
-      }
-
-      @-webkit-keyframes dash {
-        0% {
-          stroke-dasharray: 1, 200;
-          stroke-dashoffset: 0;
-        }
-        50% {
-          stroke-dasharray: 89, 200;
-          stroke-dashoffset: -35;
-        }
-        100% {
-          stroke-dasharray: 89, 200;
-          stroke-dashoffset: -124;
-        }
-      }
-
-      @keyframes dash {
-        0% {
-          stroke-dasharray: 1, 200;
-          stroke-dashoffset: 0;
-        }
-        50% {
-          stroke-dasharray: 89, 200;
-          stroke-dashoffset: -35;
-        }
-        100% {
-          stroke-dasharray: 89, 200;
-          stroke-dashoffset: -124;
-        }
-      }
-    </style>
-    <style name="ui_controlls">
-      #ui_controlls {
-        position: fixed;
-        top: 0;
-        left: 0;
-        z-index: 9;
-        width: 100%;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-      }
-      #ui_controlls.with_toolbar_showing #gradient_mask {
-        pointer-events: none;
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
-        background: linear-gradient(to top, #000000, #00000000 120px, #00000000 90%, #000000);
-        z-index: 2;
-      }
-
-      #loading_circle,
-      #percentage {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      .round {
-        transform: rotate(-90deg);
-        /* SVG */
-        fill: none;
-        stroke: white;
-        stroke-width: 8;
-        stroke-linecap: round;
-        stroke-dasharray: 0 999;
-      }
-
-      #render_picture {
-        width: 100%;
-        height: 100%;
-        background-position: center;
-        background-size: contain;
-        background-repeat: no-repeat;
-        z-index: 2;
-      }
-
-      #btn_shutter {
-        cursor: pointer;
-        position: absolute;
-        bottom: 120px;
-        left: 50%;
-        transform: translateX(-50%);
-
-        width: 60px;
-        height: 60px;
-        background-color: #fff;
-        border-radius: 100%;
-        z-index: 3;
-
-        transition: 0.15s;
-      }
-      #btn_shutter::after {
-        display: block;
-        content: "";
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: calc(100% + 3px);
-        height: calc(100% + 3px);
-        border: 4px solid #fff;
-        border-radius: 100%;
-      }
-      #btn_shutter img {
-        display: none;
-      }
-      #btn_shutter.gif {
-        background-color: #ffffff00;
-      }
-      #btn_shutter.gif img {
-        display: block;
-      }
-
-      #switch_gif_wrapper {
-        cursor: pointer;
-        position: absolute;
-        bottom: 121.5px;
-        left: calc(50% + 70px);
-        transform: translateX(-50%);
-        width: 45px;
-        z-index: 3;
-      }
-
-      #btn_close {
-        cursor: pointer;
-        position: absolute;
-        top: 12px;
-        right: 12px;
-        width: 48px;
-        height: 48px;
-        z-index: 3;
-      }
-      #btn_close::before,
-      #btn_close::after {
-        display: block;
-        content: "";
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 100%;
-        height: 2px;
-        background-color: #fff;
-      }
-      #btn_close::before {
-        transform: translate(-50%, -50%) rotate(45deg);
-      }
-      #btn_close::after {
-        transform: translate(-50%, -50%) rotate(-45deg);
-      }
-
-      #btn_save {
-        cursor: pointer;
-        position: absolute;
-        bottom: 12px;
-        right: 12px;
-        width: 48px;
-        height: 48px;
-        z-index: 3;
-      }
-    </style>
+    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="/css/loader.css">
+    <link rel="stylesheet" href="/css/ui_controlls.css">
   </head>
 
-  <body style="overflow: hidden">
+  <body id="MAIN_WRAP" style="overflow: hidden">
     <div class="container">
       <canvas id="bgRemove" class="canvas"></canvas>
       <canvas id="jeeFaceFilterCanvas" class="canvas canvas_mask"></canvas>
@@ -326,7 +36,6 @@
         </div>
       </div>
       <button id="load_btn" onclick="startVideoStream()">載入模組</button>
-      <button id="start_btn" class="hide" onclick="plaVideo()">開始</button>
     </div>
 
     <div id="ui_controlls" class="hide with_toolbar_showing">
@@ -345,21 +54,21 @@
         </svg>
       </div>
       <div id="btn_shutter">
-        <img src="./icons/gif.svg" style="width: 100%" />
+        <img src="/icons/gif.svg" style="width: 100%" />
       </div>
       <label id="switch_gif_wrapper" for="switch_gif">
         <input type="checkbox" id="switch_gif" hidden />
-        <img src="./icons/gif.svg" style="width: 100%" />
+        <img src="/icons/gif.svg" style="width: 100%" />
       </label>
       <div id="btn_close" class="hide"></div>
       <a id="btn_save" class="hide" target="_blank">
-        <img src="./icons/save_alt.svg" style="width: 100%" />
+        <img src="/icons/save_alt.svg" style="width: 100%" />
       </a>
       <!-- keep going ui -->
     </div>
 
-    <script src="./libs/gifjs/dist/gif.js"></script>
-    <script src="./main.js"></script>
-    <script src="./controll.js"></script>
+    <script src="/libs/gifjs/dist/gif.js"></script>
+    <script src="/main.js"></script>
+    <script src="/controll.js"></script>
   </body>
 </html>

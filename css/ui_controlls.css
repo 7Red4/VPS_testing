@@ -1,0 +1,136 @@
+#ui_controlls {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 9;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+#ui_controlls.with_toolbar_showing #gradient_mask {
+  pointer-events: none;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: linear-gradient(to top, #000000, #00000000 120px, #00000000 90%, #000000);
+  z-index: 2;
+}
+
+#loading_circle,
+#percentage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.round {
+  transform: rotate(-90deg);
+  /* SVG */
+  fill: none;
+  stroke: white;
+  stroke-width: 8;
+  stroke-linecap: round;
+  stroke-dasharray: 0 999;
+}
+
+#render_picture {
+  width: 100%;
+  height: 100%;
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+  z-index: 2;
+}
+
+#btn_shutter {
+  cursor: pointer;
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  width: 60px;
+  height: 60px;
+  background-color: #fff;
+  border-radius: 100%;
+  z-index: 3;
+
+  transition: 0.15s;
+}
+#btn_shutter::after {
+  display: block;
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: calc(100% + 3px);
+  height: calc(100% + 3px);
+  border: 4px solid #fff;
+  border-radius: 100%;
+}
+#btn_shutter img {
+  display: none;
+}
+#btn_shutter.gif {
+  background-color: #ffffff00;
+}
+#btn_shutter.gif img {
+  display: block;
+}
+
+#switch_gif_wrapper {
+  cursor: pointer;
+  position: absolute;
+  bottom: 21.5px;
+  left: calc(50% + 70px);
+  transform: translateX(-50%);
+  width: 45px;
+  z-index: 3;
+}
+
+#btn_close {
+  cursor: pointer;
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 48px;
+  height: 48px;
+  z-index: 3;
+}
+#btn_close::before,
+#btn_close::after {
+  display: block;
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 2px;
+  background-color: #fff;
+}
+#btn_close::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+#btn_close::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+#btn_save {
+  cursor: pointer;
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  width: 48px;
+  height: 48px;
+  z-index: 3;
+}

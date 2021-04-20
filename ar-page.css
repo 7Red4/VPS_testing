@@ -65,10 +65,15 @@ body{
 
 /*  */
 .ar-filter{
+    position: relative;
     width: 480px;
     height: 640px;
     background-color: rgb(195, 195, 195);
     border-radius: 5px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .ar-control-ui{
