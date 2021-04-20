@@ -1,4 +1,5 @@
-#ui_controlls {
+
+#MAIN_WRAP #ui_controlls {
   position: absolute;
   top: 0;
   left: 0;
@@ -10,7 +11,7 @@
   align-items: center;
   justify-content: center;
 }
-#ui_controlls.with_toolbar_showing #gradient_mask {
+#MAIN_WRAP #ui_controlls.with_toolbar_showing #gradient_mask {
   pointer-events: none;
   position: absolute;
   width: 100%;
@@ -21,8 +22,8 @@
   z-index: 2;
 }
 
-#loading_circle,
-#percentage {
+#MAIN_WRAP #loading_circle,
+#MAIN_WRAP #percentage {
   position: absolute;
   top: 0;
   left: 0;
@@ -32,7 +33,7 @@
   align-items: center;
   justify-content: center;
 }
-.round {
+#MAIN_WRAP .round {
   transform: rotate(-90deg);
   /* SVG */
   fill: none;
@@ -42,7 +43,7 @@
   stroke-dasharray: 0 999;
 }
 
-#render_picture {
+#MAIN_WRAP #render_picture {
   width: 100%;
   height: 100%;
   background-position: center;
@@ -51,7 +52,7 @@
   z-index: 2;
 }
 
-#btn_shutter {
+#MAIN_WRAP #btn_shutter {
   cursor: pointer;
   position: absolute;
   bottom: 20px;
@@ -66,7 +67,7 @@
 
   transition: 0.15s;
 }
-#btn_shutter::after {
+#MAIN_WRAP #btn_shutter::after {
   display: block;
   content: "";
   position: absolute;
@@ -78,17 +79,17 @@
   border: 4px solid #fff;
   border-radius: 100%;
 }
-#btn_shutter img {
+#MAIN_WRAP #btn_shutter img {
   display: none;
 }
-#btn_shutter.gif {
+#MAIN_WRAP #btn_shutter.gif {
   background-color: #ffffff00;
 }
-#btn_shutter.gif img {
+#MAIN_WRAP #btn_shutter.gif img {
   display: block;
 }
 
-#switch_gif_wrapper {
+#MAIN_WRAP #switch_gif_wrapper {
   cursor: pointer;
   position: absolute;
   bottom: 21.5px;
@@ -98,7 +99,7 @@
   z-index: 3;
 }
 
-#btn_close {
+#MAIN_WRAP #btn_close {
   cursor: pointer;
   position: absolute;
   top: 12px;
@@ -107,8 +108,8 @@
   height: 48px;
   z-index: 3;
 }
-#btn_close::before,
-#btn_close::after {
+#MAIN_WRAP #btn_close::before,
+#MAIN_WRAP #btn_close::after {
   display: block;
   content: "";
   position: absolute;
@@ -118,14 +119,14 @@
   height: 2px;
   background-color: #fff;
 }
-#btn_close::before {
+#MAIN_WRAP #btn_close::before {
   transform: translate(-50%, -50%) rotate(45deg);
 }
-#btn_close::after {
+#MAIN_WRAP #btn_close::after {
   transform: translate(-50%, -50%) rotate(-45deg);
 }
 
-#btn_save {
+#MAIN_WRAP #btn_save {
   cursor: pointer;
   position: absolute;
   bottom: 12px;
