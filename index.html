@@ -5,11 +5,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>JEELIZ FACEFILTER: CSS3D COMEDY GLASSES DEMO</title>
+    <title>Face Filter Demo </title>
+
+    <link rel="stylesheet" href="./main.css">
     <script src="dist/jeelizFaceFilter.js"></script>
 
     <!-- INCLUDE THREE.JS -->
     <script src="libs/three/v112/three.min.js"></script>
+    <script src="libs/three/v112/GLTFLoader.js"></script>
     <!-- INCLUDE JEELIZRESIZER -->
     <script src="helpers/JeelizResizer.js"></script>
     <!-- INCLUDE JEELIZ THREE.JS HELPER -->
@@ -224,7 +227,7 @@
       #btn_shutter {
         cursor: pointer;
         position: absolute;
-        bottom: 20px;
+        bottom: 120px;
         left: 50%;
         transform: translateX(-50%);
 
@@ -261,7 +264,7 @@
       #switch_gif_wrapper {
         cursor: pointer;
         position: absolute;
-        bottom: 21.5px;
+        bottom: 121.5px;
         left: calc(50% + 70px);
         transform: translateX(-50%);
         width: 45px;

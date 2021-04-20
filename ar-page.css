@@ -1,0 +1,97 @@
+*{
+    box-sizing: border-box;
+}
+
+html{
+    width: 100%;
+    height: 100%;
+}
+body{
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+    margin: 0;
+}
+
+.header{
+    height: 60px;
+    background-color: #DF1C11;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    left: 0;
+}
+
+
+.thermo{
+    height: 20px;
+    margin-left: 10px;
+}
+
+.nbt{
+    color: white;
+    font-size: 24px;
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+.container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+
+.container .left{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    height: 100%;
+    flex-direction: column;
+}
+
+.container .right{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    height: 100%;
+}
+
+/*  */
+.ar-filter{
+    width: 480px;
+    height: 640px;
+    background-color: rgb(195, 195, 195);
+    border-radius: 5px;
+}
+
+.ar-control-ui{
+    width: 480px;
+    height: 60px;
+    background-color: rgb(140, 140, 140);
+    margin-top: 10px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.desc{
+    max-width: 480px;
+}
+
+
+@media screen and (max-width: 700px){
+    .container{
+        flex-wrap: wrap;
+    }
+    .container .left, .container .right{
+        width: 100%;
+    }
+}
