@@ -8,24 +8,24 @@
     <link rel="stylesheet" href="./ar-page.css" />
 
     <!-- web ar script and style START -->
-    <script src="/dist/jeelizFaceFilter.js"></script>
-    <script src="/libs/three/v112/three.min.js"></script>
-    <script src="/libs/three/v112/GLTFLoader.js"></script>
-    <script src="/helpers/JeelizResizer.js"></script>
-    <script src="/helpers/JeelizThreeHelper.js"></script>
+    <script src="./dist/jeelizFaceFilter.js"></script>
+    <script src="./libs/three/v112/three.min.js"></script>
+    <script src="./libs/three/v112/GLTFLoader.js"></script>
+    <script src="./helpers/JeelizResizer.js"></script>
+    <script src="./helpers/JeelizThreeHelper.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.2"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/body-pix@2.0"></script>
-
-    <link rel="stylesheet" href="/css/index.css" />
-    <link rel="stylesheet" href="/css/loader.css" />
-    <link rel="stylesheet" href="/css/ui_controlls.css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="./css/index.css" />
+    <link rel="stylesheet" href="./css/loader.css" />
+    <link rel="stylesheet" href="./css/ui_controlls.css" />
     <!-- web ar script and style END -->
   </head>
   <body>
-    <div class="header">
+    <!-- <div class="header">
       <img src="./assets/ThermoFisher.svg" alt="" class="thermo" />
       <div class="nbt">Nbt Studio</div>
-    </div>
+    </div> -->
     <div class="container">
       <div class="left">
         <div class="ar-filter">
@@ -46,7 +46,7 @@
                   </svg>
                 </div>
               </div>
-              <button id="load_btn" onclick="startVideoStream()">載入模組</button>
+              <div id="load_btn" onclick="startVideoStream()">Open Camera</div>
             </div>
 
             <div id="ui_controlls" class="hide with_toolbar_showing">
@@ -65,21 +65,27 @@
                 </svg>
               </div>
               <div id="btn_shutter">
-                <img src="/icons/gif.svg" style="width: 100%" />
+                <img src="./icons/gif.svg" style="width: 100%" />
               </div>
               <label id="switch_gif_wrapper" for="switch_gif">
                 <input type="checkbox" id="switch_gif" hidden />
-                <img src="/icons/gif.svg" style="width: 100%" />
+                <img src="./icons/gif.svg" style="width: 100%" />
               </label>
               <div id="btn_close" class="hide"></div>
               <a id="btn_save" class="hide" target="_blank">
-                <img src="/icons/save_alt.svg" style="width: 100%" />
+                <img src="./icons/save_alt.svg" style="width: 100%" />
               </a>
             </div>
           </div>
           <!-- web ar template END -->
         </div>
-        <div class="ar-control-ui">拍照(暫時)</div>
+        <div class="ar-control-ui">
+          <div id="ar-photo" class="ar-photo" onclick="generatePicture()">Take photo</div>
+          <div id="ar-gif" class="ar-gif" onclick="generateGIF()">Take GIF</div>
+          <div id="ar-next" class="ar-next" onclick="nextStep()">Next Step</div>
+          <div id="ar-result" class="ar-result" onclick="closeResult()">Cancel</div>
+          <!-- <div class="ar-again">Again</div> -->
+        </div>
       </div>
       <div class="right">
         <div class="desc">
@@ -94,9 +100,9 @@
     </div>
 
     <!-- web ar controll scripts START -->
-    <script src="/libs/gifjs/dist/gif.js"></script>
-    <script src="/main.js"></script>
-    <script src="/controll.js"></script>
+    <script src="./libs/gifjs/dist/gif.js"></script>
+    <script src="./main.js"></script>
+    <script src="./controll.js"></script>
     <!-- web ar controll scripts END -->
   </body>
 </html>

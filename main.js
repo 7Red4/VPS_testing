@@ -167,6 +167,7 @@ async function perform() {
     hide(document.getElementById("loading"));
     hide(document.getElementById("starting_frame"));
     show(document.getElementById("ui_controlls"));
+    $(".ar-control-ui").show();
   }
   rendered = true;
   // if(window.dna){
@@ -182,4 +183,40 @@ function colorReplace(data) {
   }
 }
 
-// startVideoStream();
+
+// Main
+
+
+let payload = getUrlVars();
+console.log(payload);
+
+$(document).ready(function(){
+  $(".ar-control-ui").hide();
+  $(".ar-photo").show();
+  $(".ar-gif").show();
+  $(".ar-next").hide();
+  $(".ar-result").hide();
+  hide(SHUTTER);
+  hide(document.getElementById("switch_gif_wrapper"));
+
+  if(!payload.token){
+    window.location.href = 'https://www.fun4lab.com';
+  }
+});
+
+function nextStep(){
+  window.location.href = '/congrat/' + payload.token + '/' + payload.gameId + '/' + payload.recordId;
+}
+
+function getUrlVars()
+{
+    var vars = [], hash;
+    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+    for(var i = 0; i < hashes.length; i++)
+    {
+        hash = hashes[i].split('=');
+        vars.push(hash[0]);
+        vars[hash[0]] = hash[1];
+    }
+    return vars;
+}

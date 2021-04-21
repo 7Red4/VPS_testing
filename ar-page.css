@@ -79,13 +79,48 @@ body{
 .ar-control-ui{
     width: 480px;
     height: 60px;
-    background-color: rgb(140, 140, 140);
+    /* background-color: rgb(140, 140, 140); */
     margin-top: 10px;
     border-radius: 5px;
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
     align-items: center;
 }
+
+.ar-control-ui div{
+    background-color: none;
+    /* border-radius: 5px; */
+    width: 49%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 5px;
+    font-size: 18px;
+    color: #D53228;
+    font-weight: bold;
+    cursor: pointer;
+    border: 1px solid #D53228;
+
+}
+
+.ar-control-ui div:hover{
+    background-color: #D53228;
+    color: white;
+}
+
+#load_btn{
+    color: white;
+    border: 1px solid white;
+    padding: 20px 40px;
+    background-color: none;
+    cursor: pointer;
+}
+
+#load_btn:hover{
+    background-color: #D53228;
+}
+
 
 .desc{
     max-width: 480px;

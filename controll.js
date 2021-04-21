@@ -93,8 +93,8 @@ function hideTools() {
 }
 
 function showShutterControlls() {
-  show(SHUTTER);
-  show(document.getElementById("switch_gif_wrapper"));
+  // show(SHUTTER);
+  // show(document.getElementById("switch_gif_wrapper"));
 }
 
 function hideShutterControlls() {
@@ -185,7 +185,8 @@ async function generatePicture() {
   SAVE.href = IMAGE_URL;
 
   NO_LOADING();
-  showTools();
+  // showTools();
+  showResult();
 }
 
 async function generateGIF() {
@@ -237,28 +238,48 @@ function render_GIF() {
     RENDER_PICTURE.style.backgroundImage = `url(${IMAGE_URL})`;
     SAVE.href = IMAGE_URL;
     NO_LOADING();
-    showTools();
+    // showTools();
+    showResult();
   });
 
   gif.render();
 }
 
-SHUTTER.addEventListener("click", () => {
-  if (document.getElementById("switch_gif").checked) {
-    generateGIF();
-  } else {
-    generatePicture();
-  }
-});
+// SHUTTER.addEventListener("click", () => {
+//   if (document.getElementById("switch_gif").checked) {
+//     generateGIF();
+//   } else {
+//     generatePicture();
+//   }
+// });
+
 CLOSE.addEventListener("click", () => {
+  closeResult();
+});
+
+SAVE.addEventListener("click", () => {
+  SAVE.download = `${Date.now()}`;
+});
+
+// document.getElementById("switch_gif").addEventListener("change", () => {
+//   SHUTTER.classList.toggle("gif");
+// });
+
+
+function closeResult(){
   RENDER_PICTURE.style.backgroundImage = "none";
   hideTools();
   showShutterControlls();
   hide(RENDER_PICTURE);
-});
-SAVE.addEventListener("click", () => {
-  SAVE.download = `${Date.now()}`;
-});
-document.getElementById("switch_gif").addEventListener("change", () => {
-  SHUTTER.classList.toggle("gif");
-});
+  $(".ar-photo").show();
+  $(".ar-gif").show();
+  $(".ar-next").hide();
+  $(".ar-result").hide();
+}
+
+function showResult(){
+  $(".ar-photo").hide();
+  $(".ar-gif").hide();
+  $(".ar-next").show();
+  $(".ar-result").show();
+}
