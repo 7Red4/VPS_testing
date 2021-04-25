@@ -198,7 +198,7 @@ $(document).ready(function () {
   hide(document.getElementById("switch_gif_wrapper"));
 
   if (!payload.token) {
-    // window.location.href = "https://www.fun4lab.com";
+    window.location.href = "https://www.fun4lab.com";
   }
 });
 
