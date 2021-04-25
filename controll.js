@@ -21,6 +21,11 @@ let GIF_timer = null;
 const BG_IMAGE = new Image();
 BG_IMAGE.src = "background.png";
 
+const F_IMAGE = new Image();
+F_IMAGE.src = "assets/Ver1Q.png";
+const F_IMAGE_REAL = new Image();
+F_IMAGE_REAL.src = "assets/Ver1.png";
+
 let IMAGE_URL = "";
 
 function GO_LOADING() {
@@ -116,58 +121,84 @@ function setPercent(per) {
 const getPictureURL = ({ toGIF, index } = {}) => {
   return new Promise((resolve, reject) => {
     // prepare result canvas to draw
-    const result = document.createElement("canvas");
-    result.width = MAIN_WRAP.clientWidth;
-    result.height = MAIN_WRAP.clientHeight;
-    const context = result.getContext("2d");
 
-    // face filter area to reverse x axis
-    const filterCanvas = document.createElement("canvas");
-    const filterCanvasCtx = filterCanvas.getContext("2d");
-    filterCanvas.width = MAIN_WRAP.clientWidth;
-    filterCanvas.height = MAIN_WRAP.clientHeight;
-    filterCanvasCtx.translate(filterCanvas.width, 0);
-    filterCanvasCtx.scale(-1, 1);
+    function drawForShow() {
+      const result = document.createElement("canvas");
+      const context = result.getContext("2d");
+      result.width = MAIN_WRAP.clientWidth;
+      result.height = MAIN_WRAP.clientHeight;
 
-    // set face filter image
-    const filterImage = new Image();
-    filterImage.onload = (e) => {
-      setTimeout(() => {
-        // draw reverse image on face filter canvas
-        filterCanvasCtx.drawImage(filterImage, 0, 0);
+      // drawing layer by layer & calculating
 
-        // drawing layer by layer & calculating
+      // background image
+      drawImageProp(context, BG_IMAGE);
 
-        // background image
-        drawImageProp(context, BG_IMAGE);
+      // cliped body by body-pix
+      drawImageProp(context, canvas);
 
-        // cliped body by body-pix
-        drawImageProp(context, canvas);
+      // draw front frame
+      drawImageProp(context, F_IMAGE);
 
-        // flipX
-        context.translate(result.width, 0);
-        context.scale(-1, 1);
+      // flipX
+      context.translate(result.width, 0);
+      context.scale(-1, 1);
 
-        // face filter
-        drawImageProp(context, jeeFaceFilterCanvas);
+      // face filter
+      drawImageProp(context, jeeFaceFilterCanvas);
 
-        // flipX
-        context.translate(result.width, 0);
-        context.scale(-1, 1);
+      // flipX
+      context.translate(result.width, 0);
+      context.scale(-1, 1);
 
-        console.log({ toGIF });
-        if (toGIF) {
-          GIF_TEMP.push(result);
-          if (index === 3) {
-            render_GIF();
-          }
-        } else {
-          resolve(result.toDataURL("image/png"));
-        }
+      return result;
+    }
+
+    function drawForReal() {
+      const result = document.createElement("canvas");
+      const context = result.getContext("2d");
+      result.width = MAIN_WRAP.clientWidth;
+      result.height = MAIN_WRAP.clientHeight;
+
+      // drawing layer by layer & calculating
+
+      // background image
+      drawImageProp(context, BG_IMAGE);
+
+      // cliped body by body-pix
+      drawImageProp(context, canvas);
+
+      // draw front frame
+      drawImageProp(context, F_IMAGE_REAL);
+
+      // flipX
+      context.translate(result.width, 0);
+      context.scale(-1, 1);
+
+      // face filter
+      drawImageProp(context, jeeFaceFilterCanvas);
+
+      // flipX
+      context.translate(result.width, 0);
+      context.scale(-1, 1);
+
+      return result;
+    }
+
+    const forShowResult = drawForShow();
+    const forRealResult = drawForReal();
+
+    if (toGIF) {
+      GIF_TEMP.push(forShowResult);
+      if (index === 3) {
+        render_GIF();
+        resolve();
+      }
+    } else {
+      resolve({
+        forShow: forShowResult.toDataURL("image/png"),
+        forReal: forRealResult.toDataURL("image/png"),
       });
-    };
-
-    filterImage.src = jeeFaceFilterCanvas.toDataURL("image/png");
+    }
   });
 };
 
@@ -179,7 +210,7 @@ async function generatePicture() {
   show(RENDER_PICTURE);
   hideShutterControlls(SHUTTER);
 
-  IMAGE_URL = await getPictureURL();
+  IMAGE_URL = await getPictureURL().forShow;
 
   RENDER_PICTURE.style.backgroundImage = `url(${IMAGE_URL})`;
   SAVE.href = IMAGE_URL;
@@ -232,7 +263,6 @@ function render_GIF() {
     gif.addFrame(el);
   });
   gif.on("finished", function (blob) {
-    console.log("end");
     IMAGE_URL = URL.createObjectURL(blob);
 
     RENDER_PICTURE.style.backgroundImage = `url(${IMAGE_URL})`;
@@ -265,8 +295,7 @@ SAVE.addEventListener("click", () => {
 //   SHUTTER.classList.toggle("gif");
 // });
 
-
-function closeResult(){
+function closeResult() {
   RENDER_PICTURE.style.backgroundImage = "none";
   hideTools();
   showShutterControlls();
@@ -277,7 +306,7 @@ function closeResult(){
   $(".ar-result").hide();
 }
 
-function showResult(){
+function showResult() {
   $(".ar-photo").hide();
   $(".ar-gif").hide();
   $(".ar-next").show();

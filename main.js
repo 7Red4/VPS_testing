@@ -177,20 +177,18 @@ async function perform() {
 
 function colorReplace(data) {
   for (let i = 0; i < data.length; i += 4) {
-    if (data[i + 1] === 255) {
+    if (data[i + 1] === 255 && data[i] === 0 && data[i + 2] === 0) {
       data[i + 3] = 0;
     }
   }
 }
 
-
 // Main
-
 
 let payload = getUrlVars();
 console.log(payload);
 
-$(document).ready(function(){
+$(document).ready(function () {
   $(".ar-control-ui").hide();
   $(".ar-photo").show();
   $(".ar-gif").show();
@@ -199,24 +197,23 @@ $(document).ready(function(){
   hide(SHUTTER);
   hide(document.getElementById("switch_gif_wrapper"));
 
-  if(!payload.token){
-    window.location.href = 'https://www.fun4lab.com';
+  if (!payload.token) {
+    // window.location.href = "https://www.fun4lab.com";
   }
 });
 
-function nextStep(){
-  window.location.href = '/congrat/' + payload.token + '/' + payload.gameId + '/' + payload.recordId;
+function nextStep() {
+  window.location.href = "/congrat/" + payload.token + "/" + payload.gameId + "/" + payload.recordId;
 }
 
-function getUrlVars()
-{
-    var vars = [], hash;
-    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-    for(var i = 0; i < hashes.length; i++)
-    {
-        hash = hashes[i].split('=');
-        vars.push(hash[0]);
-        vars[hash[0]] = hash[1];
-    }
-    return vars;
+function getUrlVars() {
+  var vars = [],
+    hash;
+  var hashes = window.location.href.slice(window.location.href.indexOf("?") + 1).split("&");
+  for (var i = 0; i < hashes.length; i++) {
+    hash = hashes[i].split("=");
+    vars.push(hash[0]);
+    vars[hash[0]] = hash[1];
+  }
+  return vars;
 }

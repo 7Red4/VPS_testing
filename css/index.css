@@ -19,7 +19,10 @@
 #MAIN_WRAP #loading {
   color: #fff;
 }
-#MAIN_WRAP #load_btn {
+#MAIN_WRAP #front_frame {
+  width: 100%;
+  height: 100%;
+  z-index: 1;
 }
 
 #MAIN_WRAP .container {
