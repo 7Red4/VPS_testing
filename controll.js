@@ -17,6 +17,8 @@ const $round = document.querySelector("#percentage .round");
 const roundRadius = Number(document.querySelector("#percentage .round circle").getAttribute("r"));
 
 let GIF_timer = null;
+let currentResult = {};
+let uploaded = {};
 
 const BG_IMAGE = new Image();
 BG_IMAGE.src = "background.png";
@@ -204,13 +206,16 @@ const getPictureURL = ({ toGIF, index } = {}) => {
 
 async function generatePicture() {
   IMAGE_URL = "";
+  currentResult = {};
   GO_LOADING();
 
   // open render area
   show(RENDER_PICTURE);
   hideShutterControlls(SHUTTER);
 
-  IMAGE_URL = await getPictureURL().forShow;
+  currentResult = await getPictureURL();
+
+  IMAGE_URL = currentResult.forShow;
 
   RENDER_PICTURE.style.backgroundImage = `url(${IMAGE_URL})`;
   SAVE.href = IMAGE_URL;
@@ -221,6 +226,8 @@ async function generatePicture() {
 }
 
 async function generateGIF() {
+  IMAGE_URL = "";
+  currentResult = {};
   hideShutterControlls(SHUTTER);
 
   clearInterval(GIF_timer);
@@ -273,6 +280,22 @@ function render_GIF() {
   });
 
   gif.render();
+}
+
+function uploadImages() {
+  const t = Date.now();
+  Object.keys(currentResult).forEach(key => {
+    const image = new Image();
+    image.onload = () => {
+      S3Client.uploadFile(image, `${key}${t}`).then(data => {
+        uploaded[key] = data;
+      }).catch(err => {
+        console.error(err);
+      })
+    }
+
+    image.src = currentResult[key];
+  })
 }
 
 // SHUTTER.addEventListener("click", () => {

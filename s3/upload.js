@@ -7,22 +7,22 @@ const s3config = {
   s3Url: "https://tfvirtualphoto.s3.us-east-2.amazonaws.com",
 };
 
+const S3Client = new S3(s3config);
 
-async function uploadS3(keyname, image) {
+
+  /**
+   * {
+   *   Response: {
+   *     bucket: "your-bucket-name",
+   *     key: "photos/image.jpg",
+   *     location: "https://your-bucket.s3.amazonaws.com/photos/image.jpg"
+   *   }
+   * }
+   */
+async function uploadS3(image, fileName) {
   try {
-    const body = new FormData();
-    body.append(keyname, image);
-
-    await $.ajax({
-      url: `${s3config.s3Url}?AWSAccessKeyId=${s3config.accessKeyId}&Signature=${s3config.secretAccessKey}`,
-      contentType: "image/png",
-      method: "put",
-      data: body,
-    });
-
-    return true;
-  } catch (error) {
-    console.error(error);
-    return false;
+    return await S3Client.uploadFile(image, fileName);
+  } catch (err) {
+    console.error(err);
   }
 }
