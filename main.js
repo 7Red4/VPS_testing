@@ -67,12 +67,16 @@ function init_threeScene(spec) {
         "./assets/models/Coat.glb",
         // called when the resource is loaded
         function (Coat) {
-          Coat.scene.scale.set(1.9, 1.9, 1.9);
-          Coat.scene.position.set(0, -2.1, -0.5);
+          Coat.scene.scale.set(1.5, 1.5, 1.5);
+          Coat.scene.position.set(0, -1.5, -0.5);
           // threeStuffs.faceObject.add(Coat.scene);
-          MAIN_SCENE.add(Goggle.scene);
-          MAIN_SCENE.add(Coat.scene);
-          threeStuffs.faceObject.add(MAIN_SCENE);
+          // MAIN_SCENE.add(Goggle.scene);
+          // MAIN_SCENE.add(Coat.scene);
+          // Goggle.scene.children[0].geometry.computeVertexNormals();
+          window.goggle = Goggle.scene;
+
+          threeStuffs.faceObject.add(Goggle.scene);
+          // threeStuffs.faceObject.add(Coat.scene);
         },
         function (xhr) {
           console.log((xhr.loaded / xhr.total) * 100 + "% Coat loaded");

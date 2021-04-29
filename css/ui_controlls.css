@@ -135,3 +135,19 @@
   height: 48px;
   z-index: 3;
 }
+
+#MAIN_WRAP .switch-frame{
+  position: absolute;
+  left: 5px;
+  bottom: 5px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  z-index: 10;
+  color: white;
+}
+
+#MAIN_WRAP .switch-frame div{
+  border: 1px solid white;
+  padding: 3px 5px;
+}
