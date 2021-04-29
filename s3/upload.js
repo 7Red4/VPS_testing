@@ -1,3 +1,5 @@
+// const S3 = require("aws-s3");
+
 const s3config = {
   bucketName: "tfvirtualphoto",
   dirName: "customers",
@@ -7,18 +9,17 @@ const s3config = {
   s3Url: "https://tfvirtualphoto.s3.us-east-2.amazonaws.com",
 };
 
-const S3Client = new S3(s3config);
+// const S3Client = new S3(s3config);
 
-
-  /**
-   * {
-   *   Response: {
-   *     bucket: "your-bucket-name",
-   *     key: "photos/image.jpg",
-   *     location: "https://your-bucket.s3.amazonaws.com/photos/image.jpg"
-   *   }
-   * }
-   */
+/**
+ * {
+ *   Response: {
+ *     bucket: "your-bucket-name",
+ *     key: "photos/image.jpg",
+ *     location: "https://your-bucket.s3.amazonaws.com/photos/image.jpg"
+ *   }
+ * }
+ */
 async function uploadS3(image, fileName) {
   try {
     return await S3Client.uploadFile(image, fileName);

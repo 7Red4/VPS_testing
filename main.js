@@ -11,6 +11,8 @@ let net = null;
 let rendered = false;
 let STREAM = null;
 
+let MAIN_SCENE = null;
+
 let THREECAMERA = null;
 
 function hide(el) {
@@ -44,32 +46,48 @@ function detect_callback(faceIndex, isDetected) {
 function init_threeScene(spec) {
   const threeStuffs = JeelizThreeHelper.init(spec, detect_callback);
 
-  // CREATE A CUBE
-  // const cubeGeometry = new THREE.BoxGeometry(1, 1, 1);
-  // const cubeMaterial = new THREE.MeshNormalMaterial();
-  // const threeCube = new THREE.Mesh(cubeGeometry, cubeMaterial);
-  // threeCube.frustumCulled = false;
-  // threeStuffs.faceObject.add(threeCube);
-  // threeCube.position.set(0, 1, 0);
-
   const light = new THREE.AmbientLight(0xffffff); // soft white light
   threeStuffs.faceObject.add(light);
 
-  const loader = new THREE.GLTFLoader();
-  loader.load(
+  const Goggleloader = new THREE.GLTFLoader();
+
+  Goggleloader.load(
     // resource URL
-    "./dna.glb",
+    "./assets/models/Goggle.glb",
     // called when the resource is loaded
-    function (gltf) {
-      threeStuffs.faceObject.add(gltf.scene);
-      gltf.scene.scale.set(10, 10, 10);
-      gltf.scene.position.set(0, 0.35, 0);
-      window.dna = gltf.scene;
+    function (Goggle) {
+      Goggle.scene.scale.set(10, 10, 10);
+      Goggle.scene.position.set(0, 0.35, 0.5);
+      // threeStuffs.faceObject.add(Goggle.scene);
+
+      const Coatloader = new THREE.GLTFLoader();
+
+      Coatloader.load(
+        // resource URL
+        "./assets/models/Coat.glb",
+        // called when the resource is loaded
+        function (Coat) {
+          Coat.scene.scale.set(1.9, 1.9, 1.9);
+          Coat.scene.position.set(0, -2.1, -0.5);
+          // threeStuffs.faceObject.add(Coat.scene);
+          MAIN_SCENE.add(Goggle.scene);
+          MAIN_SCENE.add(Coat.scene);
+          threeStuffs.faceObject.add(MAIN_SCENE);
+        },
+        function (xhr) {
+          console.log((xhr.loaded / xhr.total) * 100 + "% Coat loaded");
+        },
+        function (error) {
+          console.error(error);
+          console.log("An error happened");
+        }
+      );
     },
     function (xhr) {
-      console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
+      console.log((xhr.loaded / xhr.total) * 100 + "% Goggle loaded");
     },
     function (error) {
+      console.error(error);
       console.log("An error happened");
     }
   );
@@ -80,6 +98,8 @@ function init_threeScene(spec) {
 
 // launched by body.onload():
 function main() {
+  MAIN_SCENE = new THREE.Object3D();
+
   JeelizResizer.size_canvas({
     canvasId: "jeeFaceFilterCanvas",
     callback: function (isError, bestVideoSettings) {
