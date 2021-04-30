@@ -1,4 +1,3 @@
-
 #MAIN_WRAP #ui_controlls {
   position: absolute;
   top: 0;
@@ -136,7 +135,8 @@
   z-index: 3;
 }
 
-#MAIN_WRAP .switch-frame{
+#MAIN_WRAP .switch-frame {
+  cursor: pointer;
   position: absolute;
   left: 5px;
   bottom: 5px;
@@ -147,7 +147,7 @@
   color: white;
 }
 
-#MAIN_WRAP .switch-frame div{
+#MAIN_WRAP .switch-frame div {
   border: 1px solid white;
   padding: 3px 5px;
 }
