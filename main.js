@@ -56,8 +56,8 @@ function init_threeScene(spec) {
     "./assets/models/Goggle.glb",
     // called when the resource is loaded
     function (Goggle) {
-      Goggle.scene.scale.set(10, 10, 10);
-      Goggle.scene.position.set(0, 0.35, 0.5);
+      Goggle.scene.scale.set(9, 9, 9);
+      Goggle.scene.position.set(0, 0.3, 0.5);
       // threeStuffs.faceObject.add(Goggle.scene);
 
       const Coatloader = new THREE.GLTFLoader();
@@ -67,16 +67,16 @@ function init_threeScene(spec) {
         "./assets/models/Coat.glb",
         // called when the resource is loaded
         function (Coat) {
-          Coat.scene.scale.set(1.5, 1.5, 1.5);
-          Coat.scene.position.set(0, -1.5, -0.5);
+          Coat.scene.scale.set(2.5, 2.5, 2.5);
+          Coat.scene.position.set(0, -3, 0.5);
           // threeStuffs.faceObject.add(Coat.scene);
           // MAIN_SCENE.add(Goggle.scene);
           // MAIN_SCENE.add(Coat.scene);
-          // Goggle.scene.children[0].geometry.computeVertexNormals();
           window.goggle = Goggle.scene;
-
+          window.coat = Coat.scene;
+          window.coat.visible = false;
           threeStuffs.faceObject.add(Goggle.scene);
-          // threeStuffs.faceObject.add(Coat.scene);
+          threeStuffs.faceObject.add(Coat.scene);
         },
         function (xhr) {
           console.log((xhr.loaded / xhr.total) * 100 + "% Coat loaded");

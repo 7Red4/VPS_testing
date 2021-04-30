@@ -11,6 +11,7 @@
     <script src="./dist/jeelizFaceFilter.js"></script>
     <script src="./libs/three/v112/three.min.js"></script>
     <script src="./libs/three/v112/GLTFLoader.js"></script>
+    <script src="./libs/three/v112/RGBMLoader.js"></script>
     <script src="./helpers/JeelizResizer.js"></script>
     <script src="./helpers/JeelizThreeHelper.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.2"></script>
@@ -37,9 +38,9 @@
               <canvas id="bgRemove" class="canvas"></canvas>
               <canvas id="jeeFaceFilterCanvas" class="canvas canvas_mask"></canvas>
               <div class="switch-frame">
-                <div class="select1">frame1</div>
-                <div class="select2">frame2</div>
-                <div class="select3">frame3</div>
+                <div class="frame-select" target="1">Goggle</div>
+                <div class="frame-select" target="2">coat</div>
+                <div class="frame-select" target="3">-</div>
               </div>
             </div>
             <video id="videoElement" hidden muted playsinline></video>

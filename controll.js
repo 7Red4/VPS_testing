@@ -335,3 +335,17 @@ function showResult() {
   $(".ar-next").show();
   $(".ar-result").show();
 }
+
+
+$(".frame-select").on("click", function(){
+  window.goggle.visible = false;
+  window.coat.visible = false;
+  let _target = $(this).attr("target");
+  if(_target == 1){
+    window.goggle.visible = true;
+  }else if(_target == 2){
+    window.coat.visible = true;
+  }else{
+
+  }
+});
