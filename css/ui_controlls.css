@@ -135,18 +135,27 @@
   z-index: 3;
 }
 
+#MAIN_WRAP .switch-obj,
 #MAIN_WRAP .switch-frame {
   cursor: pointer;
   position: absolute;
-  left: 5px;
-  bottom: 5px;
   display: flex;
   justify-content: flex-start;
   align-items: center;
   z-index: 10;
   color: white;
+  bottom: 5px;
 }
 
+#MAIN_WRAP .switch-obj {
+  left: 5px;
+}
+
+#MAIN_WRAP .switch-frame {
+  right: 5px;
+}
+
+#MAIN_WRAP .switch-obj div,
 #MAIN_WRAP .switch-frame div {
   border: 1px solid white;
   padding: 3px 5px;

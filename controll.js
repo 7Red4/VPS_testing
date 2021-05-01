@@ -7,6 +7,8 @@ const SAVE = document.getElementById("btn_save");
 const RENDER_PICTURE = document.getElementById("render_picture");
 const LOADING_CIRCLE = document.getElementById("loading_circle");
 
+const FRONT_FRAME = document.getElementById("front_frame");
+
 const GIF_TEMP = [];
 const gif = new GIF({
   workers: 2,
@@ -138,8 +140,18 @@ const getPictureURL = ({ toGIF, index } = {}) => {
       // cliped body by body-pix
       drawImageProp(context, canvas);
 
-      // draw front frame
-      drawImageProp(context, F_IMAGE);
+      // draw front frame\
+      context.drawImage(
+        F_IMAGE,
+        0,
+        0,
+        F_IMAGE.width,
+        F_IMAGE.height, // source rectangle
+        0,
+        0,
+        result.width,
+        result.height // destination rectangle
+      );
 
       // flipX
       context.translate(result.width, 0);
@@ -170,7 +182,17 @@ const getPictureURL = ({ toGIF, index } = {}) => {
       drawImageProp(context, canvas);
 
       // draw front frame
-      drawImageProp(context, F_IMAGE_REAL);
+      context.drawImage(
+        F_IMAGE,
+        0,
+        0,
+        F_IMAGE.width,
+        F_IMAGE.height, // source rectangle
+        0,
+        0,
+        result.width,
+        result.height // destination rectangle
+      );
 
       // flipX
       context.translate(result.width, 0);
@@ -284,18 +306,20 @@ function render_GIF() {
 
 function uploadImages() {
   const t = Date.now();
-  Object.keys(currentResult).forEach(key => {
+  Object.keys(currentResult).forEach((key) => {
     const image = new Image();
     image.onload = () => {
-      S3Client.uploadFile(image, `${key}${t}`).then(data => {
-        uploaded[key] = data;
-      }).catch(err => {
-        console.error(err);
-      })
-    }
+      S3Client.uploadFile(image, `${key}${t}`)
+        .then((data) => {
+          uploaded[key] = data;
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    };
 
     image.src = currentResult[key];
-  })
+  });
 }
 
 // SHUTTER.addEventListener("click", () => {
@@ -336,16 +360,27 @@ function showResult() {
   $(".ar-result").show();
 }
 
-
-$(".frame-select").on("click", function(){
+$(".obj-select").on("click", function () {
   window.goggle.visible = false;
   window.coat.visible = false;
   let _target = $(this).attr("target");
-  if(_target == 1){
+  if (_target == 1) {
     window.goggle.visible = true;
-  }else if(_target == 2){
+  } else if (_target == 2) {
     window.coat.visible = true;
-  }else{
+  } else {
+  }
+});
 
+$(".frame-select").on("click", function () {
+  let _target = $(this).attr("target");
+  if (_target == 4) {
+    FRONT_FRAME.src = "";
+    F_IMAGE.src = "";
+    F_IMAGE_REAL.src = "";
+  } else {
+    FRONT_FRAME.src = `assets/Ver${_target}Q.png`;
+    F_IMAGE.src = `assets/Ver${_target}Q.png`;
+    F_IMAGE_REAL.src = `assets/Ver${_target}.png`;
   }
 });
