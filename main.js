@@ -58,37 +58,59 @@ function init_threeScene(spec) {
     function (Goggle) {
       Goggle.scene.scale.set(9, 9, 9);
       Goggle.scene.position.set(0, 0.3, 0.5);
-      // threeStuffs.faceObject.add(Goggle.scene);
-
-      const Coatloader = new THREE.GLTFLoader();
-
-      Coatloader.load(
-        // resource URL
-        "./assets/models/Coat.glb",
-        // called when the resource is loaded
-        function (Coat) {
-          Coat.scene.scale.set(2.5, 2.5, 2.5);
-          Coat.scene.position.set(0, -3, 0.5);
-          // threeStuffs.faceObject.add(Coat.scene);
-          // MAIN_SCENE.add(Goggle.scene);
-          // MAIN_SCENE.add(Coat.scene);
-          window.goggle = Goggle.scene;
-          window.coat = Coat.scene;
-          window.coat.visible = false;
-          threeStuffs.faceObject.add(Goggle.scene);
-          threeStuffs.faceObject.add(Coat.scene);
-        },
-        function (xhr) {
-          console.log((xhr.loaded / xhr.total) * 100 + "% Coat loaded");
-        },
-        function (error) {
-          console.error(error);
-          console.log("An error happened");
-        }
-      );
+      
+      window.goggle = Goggle.scene;
+      threeStuffs.faceObject.add(Goggle.scene);
     },
     function (xhr) {
       console.log((xhr.loaded / xhr.total) * 100 + "% Goggle loaded");
+    },
+    function (error) {
+      console.error(error);
+      console.log("An error happened");
+    }
+  );
+
+  const Coatloader = new THREE.GLTFLoader();
+
+  Coatloader.load(
+    // resource URL
+    "./assets/models/Coat.glb",
+    // called when the resource is loaded
+    function (Coat) {
+      Coat.scene.scale.set(2.5, 2.5, 2.5);
+      Coat.scene.position.set(0, -3, 0.5);
+      // threeStuffs.faceObject.add(Coat.scene);
+      // MAIN_SCENE.add(Goggle.scene);
+      // MAIN_SCENE.add(Coat.scene);
+      window.coat = Coat.scene;
+      window.coat.visible = false;
+      threeStuffs.faceObject.add(Coat.scene);
+    },
+    function (xhr) {
+      console.log((xhr.loaded / xhr.total) * 100 + "% Coat loaded");
+    },
+    function (error) {
+      console.error(error);
+      console.log("An error happened");
+    }
+  );
+
+  const Maskloader = new THREE.GLTFLoader();
+
+  Maskloader.load(
+    // resource URL
+    "./assets/models/Mask.glb",
+    // called when the resource is loaded
+    function (Mask) {
+      Mask.scene.scale.set(9, 9, 9);
+      Mask.scene.position.set(0, -0.2, 0.2);
+      window.mask = Mask.scene;
+      window.mask.visible = false;
+      threeStuffs.faceObject.add(Mask.scene);
+    },
+    function (xhr) {
+      console.log((xhr.loaded / xhr.total) * 100 + "% Coat loaded");
     },
     function (error) {
       console.error(error);

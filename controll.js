@@ -183,11 +183,11 @@ const getPictureURL = ({ toGIF, index } = {}) => {
 
       // draw front frame
       context.drawImage(
-        F_IMAGE,
+        F_IMAGE_REAL,
         0,
         0,
-        F_IMAGE.width,
-        F_IMAGE.height, // source rectangle
+        F_IMAGE_REAL.width,
+        F_IMAGE_REAL.height, // source rectangle
         0,
         0,
         result.width,
@@ -237,7 +237,8 @@ async function generatePicture() {
 
   currentResult = await getPictureURL();
 
-  IMAGE_URL = currentResult.forShow;
+  IMAGE_URL = currentResult.forReal;
+  
 
   RENDER_PICTURE.style.backgroundImage = `url(${IMAGE_URL})`;
   SAVE.href = IMAGE_URL;
@@ -363,12 +364,14 @@ function showResult() {
 $(".obj-select").on("click", function () {
   window.goggle.visible = false;
   window.coat.visible = false;
+  window.mask.visible = false;
   let _target = $(this).attr("target");
   if (_target == 1) {
     window.goggle.visible = true;
   } else if (_target == 2) {
     window.coat.visible = true;
   } else {
+    window.mask.visible = true;
   }
 });
 
