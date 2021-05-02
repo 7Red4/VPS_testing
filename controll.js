@@ -361,21 +361,12 @@ function showResult() {
   $(".ar-result").show();
 }
 
-$(".obj-select").on("click", function () {
+
+$(".frame-select").on("click", function () {
   window.goggle.visible = false;
   window.coat.visible = false;
   window.mask.visible = false;
-  let _target = $(this).attr("target");
-  if (_target == 1) {
-    window.goggle.visible = true;
-  } else if (_target == 2) {
-    window.coat.visible = true;
-  } else {
-    window.mask.visible = true;
-  }
-});
 
-$(".frame-select").on("click", function () {
   let _target = $(this).attr("target");
   if (_target == 4) {
     FRONT_FRAME.src = "";
@@ -385,5 +376,15 @@ $(".frame-select").on("click", function () {
     FRONT_FRAME.src = `assets/Ver${_target}Q.png`;
     F_IMAGE.src = `assets/Ver${_target}Q.png`;
     F_IMAGE_REAL.src = `assets/Ver${_target}.png`;
+  }
+  
+  if (_target == 1) {
+    window.goggle.visible = true;
+    window.coat.visible = true;
+  } else if (_target == 2) {
+    window.coat.visible = true;
+    window.mask.visible = true;
+  } else {
+    window.mask.visible = true;
   }
 });
