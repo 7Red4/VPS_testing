@@ -7,6 +7,8 @@ const jeeFaceFilterCanvas = document.getElementById("jeeFaceFilterCanvas");
 
 const videoElement = document.getElementById("videoElement");
 
+window.threeDobjs = {};
+let NO_BG_REMOVE = false;
 let net = null;
 let rendered = false;
 let STREAM = null;
@@ -59,7 +61,8 @@ function init_threeScene(spec) {
       Goggle.scene.scale.set(9, 9, 9);
       Goggle.scene.position.set(0, 0.3, 0.5);
       
-      window.goggle = Goggle.scene;
+      window.threeDobjs.Goggle = Goggle.scene;
+      // window.threeDobjs.Goggle.visible = false;
       threeStuffs.faceObject.add(Goggle.scene);
     },
     function (xhr) {
@@ -80,11 +83,9 @@ function init_threeScene(spec) {
     function (Coat) {
       Coat.scene.scale.set(2.5, 2.5, 2.5);
       Coat.scene.position.set(0, -3, 0.5);
-      // threeStuffs.faceObject.add(Coat.scene);
-      // MAIN_SCENE.add(Goggle.scene);
-      // MAIN_SCENE.add(Coat.scene);
-      window.coat = Coat.scene;
-      window.coat.visible = false;
+
+      window.threeDobjs.Coat = Coat.scene;
+      window.threeDobjs.Coat.visible = false;
       threeStuffs.faceObject.add(Coat.scene);
     },
     function (xhr) {
@@ -105,12 +106,34 @@ function init_threeScene(spec) {
     function (Mask) {
       Mask.scene.scale.set(9, 9, 9);
       Mask.scene.position.set(0, -0.2, 0.2);
-      window.mask = Mask.scene;
-      window.mask.visible = false;
+      window.threeDobjs.Mask = Mask.scene;
+      window.threeDobjs.Mask.visible = false;
       threeStuffs.faceObject.add(Mask.scene);
     },
     function (xhr) {
-      console.log((xhr.loaded / xhr.total) * 100 + "% Coat loaded");
+      console.log((xhr.loaded / xhr.total) * 100 + "% Mask loaded");
+    },
+    function (error) {
+      console.error(error);
+      console.log("An error happened");
+    }
+  );
+
+  const Nerdyloader = new THREE.GLTFLoader();
+
+  Nerdyloader.load(
+    // resource URL
+    "./assets/models/Nerdy.glb",
+    // called when the resource is loaded
+    function (Nerdy) {
+      Nerdy.scene.scale.set(1, 1, 1);
+      Nerdy.scene.position.set(0, 0, 0);
+      window.threeDobjs.Nerdy = Nerdy.scene;
+      // window.threeDobjs.Nerdy.visible = false;
+      threeStuffs.faceObject.add(Nerdy.scene);
+    },
+    function (xhr) {
+      console.log((xhr.loaded / xhr.total) * 100 + "% Nerdy loaded");
     },
     function (error) {
       console.error(error);
@@ -154,7 +177,7 @@ function init_faceFilter(videoSettings) {
 
     // called at each render iteration (drawing loop):
     callbackTrack: function (detectState) {
-      perform();
+      if (!NO_BG_REMOVE) perform();
       JeelizThreeHelper.render(detectState, THREECAMERA);
     },
   }); //end JEELIZFACEFILTER.init call

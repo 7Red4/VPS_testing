@@ -1,36 +1,38 @@
 // canvas - bgFilter;
 // jeeFaceFilterCanvas - jeeFaceFilterCanvas;
 console.log(jeeFaceFilterCanvas);
-const SHUTTER = document.getElementById("btn_shutter");
-const CLOSE = document.getElementById("btn_close");
-const SAVE = document.getElementById("btn_save");
-const RENDER_PICTURE = document.getElementById("render_picture");
-const LOADING_CIRCLE = document.getElementById("loading_circle");
+const SHUTTER = document.getElementById('btn_shutter');
+const CLOSE = document.getElementById('btn_close');
+const SAVE = document.getElementById('btn_save');
+const RENDER_PICTURE = document.getElementById('render_picture');
+const LOADING_CIRCLE = document.getElementById('loading_circle');
 
-const FRONT_FRAME = document.getElementById("front_frame");
+const FRONT_FRAME = document.getElementById('front_frame');
 
 const GIF_TEMP = [];
 const gif = new GIF({
   workers: 2,
-  quality: 10,
+  quality: 10
 });
 
-const $round = document.querySelector("#percentage .round");
-const roundRadius = Number(document.querySelector("#percentage .round circle").getAttribute("r"));
+const $round = document.querySelector('#percentage .round');
+const roundRadius = Number(
+  document.querySelector('#percentage .round circle').getAttribute('r')
+);
 
 let GIF_timer = null;
 let currentResult = {};
 let uploaded = {};
 
 const BG_IMAGE = new Image();
-BG_IMAGE.src = "background.png";
+BG_IMAGE.src = 'background.png';
 
 const F_IMAGE = new Image();
-F_IMAGE.src = "assets/Ver1Q.png";
+F_IMAGE.src = 'assets/Ver1Q.png';
 const F_IMAGE_REAL = new Image();
-F_IMAGE_REAL.src = "assets/Ver1.png";
+F_IMAGE_REAL.src = 'assets/Ver1.png';
 
-let IMAGE_URL = "";
+let IMAGE_URL = '';
 
 function GO_LOADING() {
   show(LOADING_CIRCLE);
@@ -48,8 +50,8 @@ function drawImageProp(ctx, img, x, y, w, h, offsetX, offsetY) {
   }
 
   // default offset is center
-  offsetX = typeof offsetX === "number" ? offsetX : 0.5;
-  offsetY = typeof offsetY === "number" ? offsetY : 0.5;
+  offsetX = typeof offsetX === 'number' ? offsetX : 0.5;
+  offsetY = typeof offsetY === 'number' ? offsetY : 0.5;
 
   // keep bounds [0.0, 1.0]
   if (offsetX < 0) offsetX = 0;
@@ -108,7 +110,7 @@ function showShutterControlls() {
 
 function hideShutterControlls() {
   hide(SHUTTER);
-  hide(document.getElementById("switch_gif_wrapper"));
+  hide(document.getElementById('switch_gif_wrapper'));
 }
 
 function setPercent(per) {
@@ -118,7 +120,7 @@ function setPercent(per) {
   const p = reduceValue(per);
   const roundCircum = 2 * roundRadius * Math.PI;
   const roundDraw = (p * roundCircum) / 100;
-  $round.style["stroke-dasharray"] = roundDraw + " 999";
+  $round.style['stroke-dasharray'] = roundDraw + ' 999';
   console.log(p);
 }
 
@@ -126,9 +128,9 @@ const getPictureURL = ({ toGIF, index } = {}) => {
   return new Promise((resolve, reject) => {
     // prepare result canvas to draw
 
-    function drawForShow() {
-      const result = document.createElement("canvas");
-      const context = result.getContext("2d");
+    function drawResult(frameImage) {
+      const result = document.createElement('canvas');
+      const context = result.getContext('2d');
       result.width = MAIN_WRAP.clientWidth;
       result.height = MAIN_WRAP.clientHeight;
 
@@ -139,77 +141,36 @@ const getPictureURL = ({ toGIF, index } = {}) => {
 
       // cliped body by body-pix
       drawImageProp(context, canvas);
+
+      // flipX
+      context.translate(result.width, 0);
+      context.scale(-1, 1);
+
+      // face filter
+      drawImageProp(context, jeeFaceFilterCanvas);
+
+      // flipX
+      context.translate(result.width, 0);
+      context.scale(-1, 1);
 
       // draw front frame\
       context.drawImage(
-        F_IMAGE,
+        frameImage,
         0,
         0,
-        F_IMAGE.width,
-        F_IMAGE.height, // source rectangle
-        0,
-        0,
-        result.width,
-        result.height // destination rectangle
-      );
-
-      // flipX
-      context.translate(result.width, 0);
-      context.scale(-1, 1);
-
-      // face filter
-      drawImageProp(context, jeeFaceFilterCanvas);
-
-      // flipX
-      context.translate(result.width, 0);
-      context.scale(-1, 1);
-
-      return result;
-    }
-
-    function drawForReal() {
-      const result = document.createElement("canvas");
-      const context = result.getContext("2d");
-      result.width = MAIN_WRAP.clientWidth;
-      result.height = MAIN_WRAP.clientHeight;
-
-      // drawing layer by layer & calculating
-
-      // background image
-      drawImageProp(context, BG_IMAGE);
-
-      // cliped body by body-pix
-      drawImageProp(context, canvas);
-
-      // draw front frame
-      context.drawImage(
-        F_IMAGE_REAL,
-        0,
-        0,
-        F_IMAGE_REAL.width,
-        F_IMAGE_REAL.height, // source rectangle
+        frameImage.width,
+        frameImage.height, // source rectangle
         0,
         0,
         result.width,
         result.height // destination rectangle
       );
 
-      // flipX
-      context.translate(result.width, 0);
-      context.scale(-1, 1);
-
-      // face filter
-      drawImageProp(context, jeeFaceFilterCanvas);
-
-      // flipX
-      context.translate(result.width, 0);
-      context.scale(-1, 1);
-
       return result;
     }
 
-    const forShowResult = drawForShow();
-    const forRealResult = drawForReal();
+    const forShowResult = drawResult(F_IMAGE);
+    const forRealResult = drawResult(F_IMAGE_REAL);
 
     if (toGIF) {
       GIF_TEMP.push(forShowResult);
@@ -219,15 +180,15 @@ const getPictureURL = ({ toGIF, index } = {}) => {
       }
     } else {
       resolve({
-        forShow: forShowResult.toDataURL("image/png"),
-        forReal: forRealResult.toDataURL("image/png"),
+        forShow: forShowResult.toDataURL('image/png'),
+        forReal: forRealResult.toDataURL('image/png')
       });
     }
   });
 };
 
 async function generatePicture() {
-  IMAGE_URL = "";
+  IMAGE_URL = '';
   currentResult = {};
   GO_LOADING();
 
@@ -237,8 +198,7 @@ async function generatePicture() {
 
   currentResult = await getPictureURL();
 
-  IMAGE_URL = currentResult.forReal;
-  
+  IMAGE_URL = currentResult.forShow;
 
   RENDER_PICTURE.style.backgroundImage = `url(${IMAGE_URL})`;
   SAVE.href = IMAGE_URL;
@@ -249,7 +209,7 @@ async function generatePicture() {
 }
 
 async function generateGIF() {
-  IMAGE_URL = "";
+  IMAGE_URL = '';
   currentResult = {};
   hideShutterControlls(SHUTTER);
 
@@ -265,7 +225,7 @@ async function generateGIF() {
     clearInterval(GIF_timer);
     GIF_timer = null;
     counter = 0;
-    hide(document.getElementById("percentage"));
+    hide(document.getElementById('percentage'));
   }
 
   function add(count) {
@@ -273,12 +233,12 @@ async function generateGIF() {
     getPictureURL({ toGIF: true, index });
   }
 
-  show(document.getElementById("percentage"));
+  show(document.getElementById('percentage'));
 
   GIF_timer = setInterval(() => {
     setPercent(counter / 10);
     if (counter === 0 || counter === 1000 || counter === 2000) {
-      console.log("GO");
+      console.log('GO');
       add(counter);
     }
     if (counter >= 2000) {
@@ -292,7 +252,7 @@ function render_GIF() {
   GIF_TEMP.forEach((el) => {
     gif.addFrame(el);
   });
-  gif.on("finished", function (blob) {
+  gif.on('finished', function (blob) {
     IMAGE_URL = URL.createObjectURL(blob);
 
     RENDER_PICTURE.style.backgroundImage = `url(${IMAGE_URL})`;
@@ -307,20 +267,30 @@ function render_GIF() {
 
 function uploadImages() {
   const t = Date.now();
-  Object.keys(currentResult).forEach((key) => {
-    const image = new Image();
-    image.onload = () => {
-      S3Client.uploadFile(image, `${key}${t}`)
-        .then((data) => {
-          uploaded[key] = data;
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-    };
 
-    image.src = currentResult[key];
-  });
+  const imageResults = new Image();
+  imageResults.onload = () => {
+    S3ClientResults.uploadFile(imageResults)
+      .then((data) => {
+        uploaded.forReal = data;
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+  const imageUnkown = new Image();
+  imageUnkown.onload = () => {
+    S3ClientUnknown.uploadFile(imageUnkown)
+      .then((data) => {
+        uploaded.forShow = data;
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
+  imageResults.src = currentResult.forReal;
+  imageUnkown.src = currentResult.forShow;
 }
 
 // SHUTTER.addEventListener("click", () => {
@@ -331,11 +301,11 @@ function uploadImages() {
 //   }
 // });
 
-CLOSE.addEventListener("click", () => {
+CLOSE.addEventListener('click', () => {
   closeResult();
 });
 
-SAVE.addEventListener("click", () => {
+SAVE.addEventListener('click', () => {
   SAVE.download = `${Date.now()}`;
 });
 
@@ -344,47 +314,44 @@ SAVE.addEventListener("click", () => {
 // });
 
 function closeResult() {
-  RENDER_PICTURE.style.backgroundImage = "none";
+  RENDER_PICTURE.style.backgroundImage = 'none';
   hideTools();
   showShutterControlls();
   hide(RENDER_PICTURE);
-  $(".ar-photo").show();
-  $(".ar-gif").show();
-  $(".ar-next").hide();
-  $(".ar-result").hide();
+  $('.ar-photo').show();
+  $('.ar-gif').show();
+  $('.ar-next').hide();
+  $('.ar-result').hide();
 }
 
 function showResult() {
-  $(".ar-photo").hide();
-  $(".ar-gif").hide();
-  $(".ar-next").show();
-  $(".ar-result").show();
+  $('.ar-photo').hide();
+  $('.ar-gif').hide();
+  $('.ar-next').show();
+  $('.ar-result').show();
 }
 
+$('.frame-select').on('click', function () {
+  Object.keys(threeDobjs).forEach(model => (model.visible = false))
 
-$(".frame-select").on("click", function () {
-  window.goggle.visible = false;
-  window.coat.visible = false;
-  window.mask.visible = false;
-
-  let _target = $(this).attr("target");
+  let _target = $(this).attr('target');
   if (_target == 4) {
-    FRONT_FRAME.src = "";
-    F_IMAGE.src = "";
-    F_IMAGE_REAL.src = "";
+    FRONT_FRAME.src = '';
+    F_IMAGE.src = '';
+    F_IMAGE_REAL.src = '';
   } else {
     FRONT_FRAME.src = `assets/Ver${_target}Q.png`;
     F_IMAGE.src = `assets/Ver${_target}Q.png`;
     F_IMAGE_REAL.src = `assets/Ver${_target}.png`;
   }
-  
+
   if (_target == 1) {
-    window.goggle.visible = true;
-    window.coat.visible = true;
+    window.threeDobjs.Goggle.visible = true;
+    window.threeDobjs.Coat.visible = true;
   } else if (_target == 2) {
-    window.coat.visible = true;
-    window.mask.visible = true;
+    window.threeDobjs.Coat.visible = true;
+    window.threeDobjs.Mask.visible = true;
   } else {
-    window.mask.visible = true;
+    window.threeDobjs.Mask.visible = true;
   }
 });
