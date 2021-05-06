@@ -34,7 +34,12 @@ const currentFrame = {
     return this._v;
   },
   set value(v) {
-    if (v !== this._v) {
+    v = Number(v);
+    if (v != this._v) {
+      Object.keys(_3dObjs).forEach((model) => {
+        window._3dObjs[model].visible = false;
+      });
+
       if (FRAME_COMBINATION[v - 1]) {
         $('.frame-select').removeClass('active');
         $(`.frame-select[target=${v}]`).addClass('active');
@@ -49,7 +54,7 @@ const currentFrame = {
         });
       }
     }
-    this._v = v;
+    this._v = Number(v);
   }
 };
 
@@ -361,10 +366,6 @@ function showResult() {
 }
 
 $('.frame-select').on('click', function (e) {
-  Object.keys(_3dObjs).forEach((model) => {
-    window._3dObjs[model].visible = false;
-  });
-
   let _target = $(this).attr('target');
   currentFrame.value = _target;
   if (_target === 'removeBGswitch') {
