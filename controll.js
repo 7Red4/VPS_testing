@@ -1,6 +1,5 @@
 // canvas - bgFilter;
 // jeeFaceFilterCanvas - jeeFaceFilterCanvas;
-console.log(jeeFaceFilterCanvas);
 const SHUTTER = document.getElementById('btn_shutter');
 const CLOSE = document.getElementById('btn_close');
 const SAVE = document.getElementById('btn_save');
@@ -140,7 +139,7 @@ const getPictureURL = ({ toGIF, index } = {}) => {
       drawImageProp(context, BG_IMAGE);
 
       // cliped body by body-pix
-      drawImageProp(context, canvas);
+      drawImageProp(context, BG_REMOVE_CANVAS);
 
       // flipX
       context.translate(result.width, 0);

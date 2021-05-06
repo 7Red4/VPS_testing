@@ -1,8 +1,8 @@
 // "use strict";
 const MAIN_WRAP = document.getElementById("MAIN_WRAP");
 
-const canvas = document.getElementById("bgRemove");
-const ctx = canvas.getContext("2d");
+const BG_REMOVE_CANVAS = document.getElementById("bgRemove");
+const ctx = BG_REMOVE_CANVAS.getContext("2d");
 const jeeFaceFilterCanvas = document.getElementById("jeeFaceFilterCanvas");
 
 const videoElement = document.getElementById("videoElement");
@@ -28,8 +28,8 @@ function show(el) {
 function resize() {
   jeeFaceFilterCanvas.width = MAIN_WRAP.clientWidth;
   jeeFaceFilterCanvas.height = MAIN_WRAP.clientHeight;
-  canvas.width = MAIN_WRAP.clientWidth;
-  canvas.height = MAIN_WRAP.clientHeight;
+  BG_REMOVE_CANVAS.width = MAIN_WRAP.clientWidth;
+  BG_REMOVE_CANVAS.height = MAIN_WRAP.clientHeight;
 }
 resize();
 
@@ -228,8 +228,8 @@ async function perform() {
   const edgeBlurAmount = 0;
   const flipHorizontal = true;
 
-  bodyPix.drawMask(canvas, videoElement, backgroundDarkeningMask, opacity, edgeBlurAmount, flipHorizontal);
-  const _IMAGE_DATA = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  bodyPix.drawMask(BG_REMOVE_CANVAS, videoElement, backgroundDarkeningMask, opacity, edgeBlurAmount, flipHorizontal);
+  const _IMAGE_DATA = ctx.getImageData(0, 0, BG_REMOVE_CANVAS.width, BG_REMOVE_CANVAS.height);
   colorReplace(_IMAGE_DATA.data);
   ctx.putImageData(_IMAGE_DATA, 0, 0);
   if (!rendered) {
