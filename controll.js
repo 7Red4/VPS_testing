@@ -330,10 +330,14 @@ function showResult() {
   $('.ar-result').show();
 }
 
-$('.frame-select').on('click', function () {
+$('.frame-select').on('click', function (e) {
   Object.keys(threeDobjs).forEach(model => (model.visible = false))
 
   let _target = $(this).attr('target');
+  if (_target === 'removeBGswitch') {
+    NO_BG_REMOVE.value = !NO_BG_REMOVE.value
+    e.target.innerText = NO_BG_REMOVE.value ? '開啟去背' : '關閉去背';
+  }
   if (_target == 4) {
     FRONT_FRAME.src = '';
     F_IMAGE.src = '';

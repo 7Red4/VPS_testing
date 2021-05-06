@@ -14,11 +14,15 @@ const NO_BG_REMOVE = {
     return !!this._value;
   },
   set value(v) {
-    this._value = !!v;
     if (!!v !== this._value) {
-      JEELIZFACEFILTER.destroy();
-      loadBodyPix();
+      show(document.getElementById('starting_frame'));
+      show(document.getElementById('loading'));
+      hide(document.querySelector('.switch-frame'));
+      JEELIZFACEFILTER.destroy().then(() => {
+        startVideoStream();
+      });
     }
+    this._value = !!v;
   }
 };
 let net = null;
@@ -182,6 +186,7 @@ function init_faceFilter(videoSettings) {
       console.log('INFO: JEELIZFACEFILTER IS READY');
       hide(document.getElementById('loading'));
       hide(document.getElementById('starting_frame'));
+      show(document.querySelector('.switch-frame'));
       show(document.getElementById('ui_controlls'));
       $('.ar-control-ui').show();
 
@@ -219,19 +224,25 @@ function plaVideo() {
   videoElement.addEventListener('playing', (e) => loadBodyPix(e, STREAM));
 }
 
-async function loadBodyPix(e, stream) {
+function loadBodyPix(e, stream = STREAM) {
   const streamSetting = stream.getVideoTracks()[0].getSettings();
   const aspectRatio = streamSetting.aspectRatio;
-  videoElement.width = streamSetting.width;
-  videoElement.height = streamSetting.height;
+  videoElement.width = videoElement.width || streamSetting.width;
+  videoElement.height = videoElement.height || streamSetting.height;
 
   if (!NO_BG_REMOVE.value) {
-    net = await bodyPix.load();
+    bodyPix.load().then((res) => {
+      net = res;
+      main();
+    });
+  } else {
+    main();
   }
-  main();
 }
 
 async function perform() {
+  if (!net) return;
+  if (!net.segmentPerson) return;
   const segmentation = await net.segmentPerson(videoElement);
   const maskBackground = true;
   // Convert the segmentation into a mask to darken the background.

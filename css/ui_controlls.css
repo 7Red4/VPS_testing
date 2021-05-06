@@ -140,11 +140,13 @@
   cursor: pointer;
   position: absolute;
   display: flex;
-  justify-content: flex-start;
+  justify-content: flex-end;
   align-items: center;
   z-index: 10;
   color: white;
   bottom: 5px;
+  width: 100%;
+  padding: 0 6px;
 }
 
 #MAIN_WRAP .switch-obj {
@@ -152,11 +154,11 @@
 }
 
 #MAIN_WRAP .switch-frame {
-  right: 5px;
+  left: 0px;
 }
 
-#MAIN_WRAP .switch-obj div,
-#MAIN_WRAP .switch-frame div {
+#MAIN_WRAP .switch-obj .frame-select,
+#MAIN_WRAP .switch-frame .frame-select {
   border: 1px solid white;
   padding: 3px 5px;
 }
