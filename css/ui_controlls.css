@@ -17,7 +17,13 @@
   height: 100%;
   top: 0;
   left: 0;
-  background: linear-gradient(to top, #000000, #00000000 120px, #00000000 90%, #000000);
+  background: linear-gradient(
+    to top,
+    #000000,
+    #00000000 120px,
+    #00000000 90%,
+    #000000
+  );
   z-index: 2;
 }
 
@@ -68,7 +74,7 @@
 }
 #MAIN_WRAP #btn_shutter::after {
   display: block;
-  content: "";
+  content: '';
   position: absolute;
   top: 50%;
   left: 50%;
@@ -110,7 +116,7 @@
 #MAIN_WRAP #btn_close::before,
 #MAIN_WRAP #btn_close::after {
   display: block;
-  content: "";
+  content: '';
   position: absolute;
   top: 50%;
   left: 50%;
@@ -135,7 +141,6 @@
   z-index: 3;
 }
 
-#MAIN_WRAP .switch-obj,
 #MAIN_WRAP .switch-frame {
   cursor: pointer;
   position: absolute;
@@ -149,16 +154,16 @@
   padding: 0 6px;
 }
 
-#MAIN_WRAP .switch-obj {
-  left: 5px;
-}
-
 #MAIN_WRAP .switch-frame {
   left: 0px;
 }
 
-#MAIN_WRAP .switch-obj .frame-select,
 #MAIN_WRAP .switch-frame .frame-select {
   border: 1px solid white;
   padding: 3px 5px;
+}
+
+#MAIN_WRAP .switch-frame .frame-select.active {
+  color: #000;
+  background-color: #fff;
 }

@@ -9,10 +9,7 @@ const LOADING_CIRCLE = document.getElementById('loading_circle');
 const FRONT_FRAME = document.getElementById('front_frame');
 
 const GIF_TEMP = [];
-const gif = new GIF({
-  workers: 2,
-  quality: 10
-});
+const gif = null;
 
 const $round = document.querySelector('#percentage .round');
 const roundRadius = Number(
@@ -27,11 +24,40 @@ const BG_IMAGE = new Image();
 BG_IMAGE.src = 'background.png';
 
 const F_IMAGE = new Image();
-F_IMAGE.src = 'assets/Ver1Q.png';
 const F_IMAGE_REAL = new Image();
-F_IMAGE_REAL.src = 'assets/Ver1.png';
 
 let IMAGE_URL = '';
+
+const currentFrame = {
+  _v: 0,
+  get value() {
+    return this._v;
+  },
+  set value(v) {
+    if (v !== this._v) {
+      if (FRAME_COMBINATION[v - 1]) {
+        $('.frame-select').removeClass('active');
+        $(`.frame-select[target=${v}]`).addClass('active');
+        if ([1, 2, 3].includes(v)) {
+          FRONT_FRAME.src = `assets/Ver${v}Q.png`;
+          F_IMAGE.src = `assets/Ver${v}Q.png`;
+          F_IMAGE_REAL.src = `assets/Ver${v}.png`;
+        }
+        FRAME_COMBINATION[v - 1].models.forEach((modelName) => {
+          window._3dObjs[modelName] &&
+            (window._3dObjs[modelName].visible = true);
+        });
+      }
+    }
+    this._v = v;
+  }
+};
+
+const FRAME_COMBINATION = [
+  { models: ['Goggle', 'Text3D', 'Coat'] },
+  { models: ['Mask'] },
+  { models: ['Goggle', 'Nerdy', 'Coat'] }
+];
 
 function GO_LOADING() {
   show(LOADING_CIRCLE);
@@ -248,6 +274,10 @@ async function generateGIF() {
 }
 
 function render_GIF() {
+  gif = new GIF({
+    workers: 2,
+    quality: 10
+  });
   GIF_TEMP.forEach((el) => {
     gif.addFrame(el);
   });
@@ -331,30 +361,14 @@ function showResult() {
 }
 
 $('.frame-select').on('click', function (e) {
-  Object.keys(threeDobjs).forEach(model => (model.visible = false))
+  Object.keys(_3dObjs).forEach((model) => {
+    window._3dObjs[model].visible = false;
+  });
 
   let _target = $(this).attr('target');
+  currentFrame.value = _target;
   if (_target === 'removeBGswitch') {
-    NO_BG_REMOVE.value = !NO_BG_REMOVE.value
+    NO_BG_REMOVE.value = !NO_BG_REMOVE.value;
     e.target.innerText = NO_BG_REMOVE.value ? '開啟去背' : '關閉去背';
-  }
-  if (_target == 4) {
-    FRONT_FRAME.src = '';
-    F_IMAGE.src = '';
-    F_IMAGE_REAL.src = '';
-  } else {
-    FRONT_FRAME.src = `assets/Ver${_target}Q.png`;
-    F_IMAGE.src = `assets/Ver${_target}Q.png`;
-    F_IMAGE_REAL.src = `assets/Ver${_target}.png`;
-  }
-
-  if (_target == 1) {
-    window.threeDobjs.Goggle.visible = true;
-    window.threeDobjs.Coat.visible = true;
-  } else if (_target == 2) {
-    window.threeDobjs.Coat.visible = true;
-    window.threeDobjs.Mask.visible = true;
-  } else {
-    window.threeDobjs.Mask.visible = true;
   }
 });

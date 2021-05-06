@@ -7,7 +7,6 @@ const jeeFaceFilterCanvas = document.getElementById('jeeFaceFilterCanvas');
 
 const videoElement = document.getElementById('videoElement');
 
-window.threeDobjs = {};
 const NO_BG_REMOVE = {
   _value: true,
   get value() {
@@ -49,6 +48,90 @@ resize();
 
 window.addEventListener('resize', resize);
 
+window._3dObjs = {};
+function modelLoder(threeStuffs) {
+  const loader = new THREE.GLTFLoader();
+  const models = {
+    Bottle: {
+      scale: [1, 1, 1],
+      position: [0, 0, 0]
+    },
+    'Chemical-1': {
+      scale: [1, 1, 1],
+      position: [0, 0, 0]
+    },
+    'Chemical-2': {
+      scale: [1, 1, 1],
+      position: [0, 0, 0]
+    },
+    Coat: {
+      scale: [2.5, 2.5, 2.5],
+      position: [0, -3, 0.5]
+    },
+    Dna: {
+      scale: [1, 1, 1],
+      position: [0, 0, 0]
+    },
+    Goggle: {
+      scale: [9, 9, 9],
+      position: [0, 0.3, 0.5]
+    },
+    Mask: {
+      scale: [9, 9, 9],
+      position: [0, -0.2, 0.2]
+    },
+    Nerdy: {
+      scale: [6, 6, 6],
+      position: [0, 1.5, 0]
+    },
+    Text3D: {
+      scale: [5, 5, 5],
+      position: [0, 0.8, 0]
+    }
+  };
+
+  Object.keys(models).forEach((modelName, idx, keys) => {
+    if (
+      !window._3dObjs[modelName] &&
+      threeStuffs.faceObject.children.find(({ name }) => name !== modelName)
+    ) {
+      loader.load(
+        // resource URL
+        `./assets/models/${modelName}.glb`,
+        // called when the resource is loaded
+        function (model) {
+          model.scene.scale.set(...models[modelName].scale);
+          model.scene.position.set(...models[modelName].position);
+
+          window._3dObjs[modelName] = model.scene;
+          window._3dObjs[modelName].visible = false;
+          window._3dObjs[modelName].name = modelName;
+          threeStuffs.faceObject.add(model.scene);
+
+          if (
+            threeStuffs.faceObject.children.length ===
+            keys.length + 1 /* one is  light object */
+          ) {
+            // load complete
+            console.log('load complete');
+            currentFrame.value = 1;
+          }
+        },
+        function (xhr) {
+          console.log((xhr.loaded / xhr.total) * 100 + `% ${modelName} loaded`);
+        },
+        function (error) {
+          console.error(error);
+          console.log('An error happened');
+        }
+      );
+    } else {
+      threeStuffs.faceObject.add(window._3dObjs[modelName]);
+      currentFrame.value = 1;
+    }
+  });
+}
+
 // callback: launched if a face is detected or lost.
 function detect_callback(faceIndex, isDetected) {
   if (isDetected) {
@@ -65,95 +148,7 @@ function init_threeScene(spec) {
   const light = new THREE.AmbientLight(0xffffff); // soft white light
   threeStuffs.faceObject.add(light);
 
-  const Goggleloader = new THREE.GLTFLoader();
-
-  Goggleloader.load(
-    // resource URL
-    './assets/models/Goggle.glb',
-    // called when the resource is loaded
-    function (Goggle) {
-      Goggle.scene.scale.set(9, 9, 9);
-      Goggle.scene.position.set(0, 0.3, 0.5);
-
-      window.threeDobjs.Goggle = Goggle.scene;
-      // window.threeDobjs.Goggle.visible = false;
-      threeStuffs.faceObject.add(Goggle.scene);
-    },
-    function (xhr) {
-      console.log((xhr.loaded / xhr.total) * 100 + '% Goggle loaded');
-    },
-    function (error) {
-      console.error(error);
-      console.log('An error happened');
-    }
-  );
-
-  const Coatloader = new THREE.GLTFLoader();
-
-  Coatloader.load(
-    // resource URL
-    './assets/models/Coat.glb',
-    // called when the resource is loaded
-    function (Coat) {
-      Coat.scene.scale.set(2.5, 2.5, 2.5);
-      Coat.scene.position.set(0, -3, 0.5);
-
-      window.threeDobjs.Coat = Coat.scene;
-      window.threeDobjs.Coat.visible = false;
-      threeStuffs.faceObject.add(Coat.scene);
-    },
-    function (xhr) {
-      console.log((xhr.loaded / xhr.total) * 100 + '% Coat loaded');
-    },
-    function (error) {
-      console.error(error);
-      console.log('An error happened');
-    }
-  );
-
-  const Maskloader = new THREE.GLTFLoader();
-
-  Maskloader.load(
-    // resource URL
-    './assets/models/Mask.glb',
-    // called when the resource is loaded
-    function (Mask) {
-      Mask.scene.scale.set(9, 9, 9);
-      Mask.scene.position.set(0, -0.2, 0.2);
-      window.threeDobjs.Mask = Mask.scene;
-      window.threeDobjs.Mask.visible = false;
-      threeStuffs.faceObject.add(Mask.scene);
-    },
-    function (xhr) {
-      console.log((xhr.loaded / xhr.total) * 100 + '% Mask loaded');
-    },
-    function (error) {
-      console.error(error);
-      console.log('An error happened');
-    }
-  );
-
-  const Nerdyloader = new THREE.GLTFLoader();
-
-  Nerdyloader.load(
-    // resource URL
-    './assets/models/Nerdy.glb',
-    // called when the resource is loaded
-    function (Nerdy) {
-      Nerdy.scene.scale.set(1, 1, 1);
-      Nerdy.scene.position.set(0, 0, 0);
-      window.threeDobjs.Nerdy = Nerdy.scene;
-      // window.threeDobjs.Nerdy.visible = false;
-      threeStuffs.faceObject.add(Nerdy.scene);
-    },
-    function (xhr) {
-      console.log((xhr.loaded / xhr.total) * 100 + '% Nerdy loaded');
-    },
-    function (error) {
-      console.error(error);
-      console.log('An error happened');
-    }
-  );
+  modelLoder(threeStuffs);
 
   //CREATE THE CAMERA
   THREECAMERA = JeelizThreeHelper.create_camera();
