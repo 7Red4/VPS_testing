@@ -114,7 +114,7 @@ const JeelizThreeHelper = (function () {
 
     // CREATE THE VIDEO BACKGROUND:
     console.log(1);
-    if (!window.NO_BG_REMOVE) return;
+    if (!NO_BG_REMOVE.value) return;
     const videoMaterial = new THREE.RawShaderMaterial({
       depthWrite: false,
       depthTest: false,

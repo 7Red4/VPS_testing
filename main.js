@@ -1,28 +1,38 @@
 // "use strict";
-const MAIN_WRAP = document.getElementById("MAIN_WRAP");
+const MAIN_WRAP = document.getElementById('MAIN_WRAP');
 
-const BG_REMOVE_CANVAS = document.getElementById("bgRemove");
-const ctx = BG_REMOVE_CANVAS.getContext("2d");
-const jeeFaceFilterCanvas = document.getElementById("jeeFaceFilterCanvas");
+const BG_REMOVE_CANVAS = document.getElementById('bgRemove');
+const bgRemoveCanvasctx = BG_REMOVE_CANVAS.getContext('2d');
+const jeeFaceFilterCanvas = document.getElementById('jeeFaceFilterCanvas');
 
-const videoElement = document.getElementById("videoElement");
+const videoElement = document.getElementById('videoElement');
 
 window.threeDobjs = {};
-let NO_BG_REMOVE = false;
+const NO_BG_REMOVE = {
+  _value: true,
+  get value() {
+    return !!this._value;
+  },
+  set value(v) {
+    this._value = !!v;
+    if (!!v !== this._value) {
+      JEELIZFACEFILTER.destroy();
+      loadBodyPix();
+    }
+  }
+};
 let net = null;
 let rendered = false;
 let STREAM = null;
 
-let MAIN_SCENE = null;
-
 let THREECAMERA = null;
 
 function hide(el) {
-  el.classList.add("hide");
+  el.classList.add('hide');
 }
 
 function show(el) {
-  el.classList.remove("hide");
+  el.classList.remove('hide');
 }
 
 function resize() {
@@ -33,14 +43,14 @@ function resize() {
 }
 resize();
 
-window.addEventListener("resize", resize);
+window.addEventListener('resize', resize);
 
 // callback: launched if a face is detected or lost.
 function detect_callback(faceIndex, isDetected) {
   if (isDetected) {
-    console.log("INFO in detect_callback(): DETECTED");
+    console.log('INFO in detect_callback(): DETECTED');
   } else {
-    console.log("INFO in detect_callback(): LOST");
+    console.log('INFO in detect_callback(): LOST');
   }
 }
 
@@ -55,22 +65,22 @@ function init_threeScene(spec) {
 
   Goggleloader.load(
     // resource URL
-    "./assets/models/Goggle.glb",
+    './assets/models/Goggle.glb',
     // called when the resource is loaded
     function (Goggle) {
       Goggle.scene.scale.set(9, 9, 9);
       Goggle.scene.position.set(0, 0.3, 0.5);
-      
+
       window.threeDobjs.Goggle = Goggle.scene;
       // window.threeDobjs.Goggle.visible = false;
       threeStuffs.faceObject.add(Goggle.scene);
     },
     function (xhr) {
-      console.log((xhr.loaded / xhr.total) * 100 + "% Goggle loaded");
+      console.log((xhr.loaded / xhr.total) * 100 + '% Goggle loaded');
     },
     function (error) {
       console.error(error);
-      console.log("An error happened");
+      console.log('An error happened');
     }
   );
 
@@ -78,7 +88,7 @@ function init_threeScene(spec) {
 
   Coatloader.load(
     // resource URL
-    "./assets/models/Coat.glb",
+    './assets/models/Coat.glb',
     // called when the resource is loaded
     function (Coat) {
       Coat.scene.scale.set(2.5, 2.5, 2.5);
@@ -89,11 +99,11 @@ function init_threeScene(spec) {
       threeStuffs.faceObject.add(Coat.scene);
     },
     function (xhr) {
-      console.log((xhr.loaded / xhr.total) * 100 + "% Coat loaded");
+      console.log((xhr.loaded / xhr.total) * 100 + '% Coat loaded');
     },
     function (error) {
       console.error(error);
-      console.log("An error happened");
+      console.log('An error happened');
     }
   );
 
@@ -101,7 +111,7 @@ function init_threeScene(spec) {
 
   Maskloader.load(
     // resource URL
-    "./assets/models/Mask.glb",
+    './assets/models/Mask.glb',
     // called when the resource is loaded
     function (Mask) {
       Mask.scene.scale.set(9, 9, 9);
@@ -111,11 +121,11 @@ function init_threeScene(spec) {
       threeStuffs.faceObject.add(Mask.scene);
     },
     function (xhr) {
-      console.log((xhr.loaded / xhr.total) * 100 + "% Mask loaded");
+      console.log((xhr.loaded / xhr.total) * 100 + '% Mask loaded');
     },
     function (error) {
       console.error(error);
-      console.log("An error happened");
+      console.log('An error happened');
     }
   );
 
@@ -123,7 +133,7 @@ function init_threeScene(spec) {
 
   Nerdyloader.load(
     // resource URL
-    "./assets/models/Nerdy.glb",
+    './assets/models/Nerdy.glb',
     // called when the resource is loaded
     function (Nerdy) {
       Nerdy.scene.scale.set(1, 1, 1);
@@ -133,11 +143,11 @@ function init_threeScene(spec) {
       threeStuffs.faceObject.add(Nerdy.scene);
     },
     function (xhr) {
-      console.log((xhr.loaded / xhr.total) * 100 + "% Nerdy loaded");
+      console.log((xhr.loaded / xhr.total) * 100 + '% Nerdy loaded');
     },
     function (error) {
       console.error(error);
-      console.log("An error happened");
+      console.log('An error happened');
     }
   );
 
@@ -147,49 +157,52 @@ function init_threeScene(spec) {
 
 // launched by body.onload():
 function main() {
-  MAIN_SCENE = new THREE.Object3D();
-
   JeelizResizer.size_canvas({
-    canvasId: "jeeFaceFilterCanvas",
+    canvasId: 'jeeFaceFilterCanvas',
     callback: function (isError, bestVideoSettings) {
       init_faceFilter(bestVideoSettings);
-    },
+    }
   });
 }
 
 function init_faceFilter(videoSettings) {
   JEELIZFACEFILTER.init({
     videoSettings: {
-      videoElement,
+      videoElement
     },
-    canvasId: "jeeFaceFilterCanvas",
-    NNCPath: "/neuralNets/", // root of NN_DEFAULT.json file
+    canvasId: 'jeeFaceFilterCanvas',
+    NNCPath: '/neuralNets/', // root of NN_DEFAULT.json file
     maxFacesDetected: 1,
     callbackReady: function (errCode, spec) {
       if (errCode) {
-        console.log("AN ERROR HAPPENS. ERR =", errCode);
+        console.log('AN ERROR HAPPENS. ERR =', errCode);
         return;
       }
 
-      console.log("INFO: JEELIZFACEFILTER IS READY");
+      console.log('INFO: JEELIZFACEFILTER IS READY');
+      hide(document.getElementById('loading'));
+      hide(document.getElementById('starting_frame'));
+      show(document.getElementById('ui_controlls'));
+      $('.ar-control-ui').show();
+
       init_threeScene(spec);
     },
 
     // called at each render iteration (drawing loop):
     callbackTrack: function (detectState) {
-      if (!NO_BG_REMOVE) perform();
+      if (!NO_BG_REMOVE.value) perform();
       JeelizThreeHelper.render(detectState, THREECAMERA);
-    },
+    }
   }); //end JEELIZFACEFILTER.init call
 }
 
 function startVideoStream() {
-  show(document.getElementById("loading"));
-  hide(document.getElementById("load_btn"));
+  show(document.getElementById('loading'));
+  hide(document.getElementById('load_btn'));
   navigator.mediaDevices
     .getUserMedia({
       video: true,
-      audio: false,
+      audio: false
     })
     .then((stream) => {
       STREAM = stream;
@@ -203,7 +216,7 @@ function startVideoStream() {
 
 function plaVideo() {
   videoElement.play();
-  videoElement.addEventListener("playing", (e) => loadBodyPix(e, STREAM));
+  videoElement.addEventListener('playing', (e) => loadBodyPix(e, STREAM));
 }
 
 async function loadBodyPix(e, stream) {
@@ -212,7 +225,9 @@ async function loadBodyPix(e, stream) {
   videoElement.width = streamSetting.width;
   videoElement.height = streamSetting.height;
 
-  net = await bodyPix.load();
+  if (!NO_BG_REMOVE.value) {
+    net = await bodyPix.load();
+  }
   main();
 }
 
@@ -222,21 +237,34 @@ async function perform() {
   // Convert the segmentation into a mask to darken the background.
   const foregroundColor = { r: 255, g: 255, b: 255, a: 0 };
   const backgroundColor = { r: 0, g: 255, b: 0, a: 255 };
-  const backgroundDarkeningMask = bodyPix.toMask(segmentation, foregroundColor, backgroundColor);
+  const backgroundDarkeningMask = bodyPix.toMask(
+    segmentation,
+    foregroundColor,
+    backgroundColor
+  );
 
   const opacity = 1;
   const edgeBlurAmount = 0;
   const flipHorizontal = true;
 
-  bodyPix.drawMask(BG_REMOVE_CANVAS, videoElement, backgroundDarkeningMask, opacity, edgeBlurAmount, flipHorizontal);
-  const _IMAGE_DATA = ctx.getImageData(0, 0, BG_REMOVE_CANVAS.width, BG_REMOVE_CANVAS.height);
+  bodyPix.drawMask(
+    BG_REMOVE_CANVAS,
+    videoElement,
+    backgroundDarkeningMask,
+    opacity,
+    edgeBlurAmount,
+    flipHorizontal
+  );
+  const _IMAGE_DATA = bgRemoveCanvasctx.getImageData(
+    0,
+    0,
+    BG_REMOVE_CANVAS.width,
+    BG_REMOVE_CANVAS.height
+  );
   colorReplace(_IMAGE_DATA.data);
-  ctx.putImageData(_IMAGE_DATA, 0, 0);
+  bgRemoveCanvasctx.putImageData(_IMAGE_DATA, 0, 0);
   if (!rendered) {
-    hide(document.getElementById("loading"));
-    hide(document.getElementById("starting_frame"));
-    show(document.getElementById("ui_controlls"));
-    $(".ar-control-ui").show();
+    //
   }
   rendered = true;
   // if(window.dna){
@@ -258,29 +286,32 @@ let payload = getUrlVars();
 console.log(payload);
 
 $(document).ready(function () {
-  $(".ar-control-ui").hide();
-  $(".ar-photo").show();
-  $(".ar-gif").show();
-  $(".ar-next").hide();
-  $(".ar-result").hide();
+  $('.ar-control-ui').hide();
+  $('.ar-photo').show();
+  $('.ar-gif').show();
+  $('.ar-next').hide();
+  $('.ar-result').hide();
   hide(SHUTTER);
-  hide(document.getElementById("switch_gif_wrapper"));
+  hide(document.getElementById('switch_gif_wrapper'));
 
   if (!payload.token) {
-    window.location.href = "https://www.fun4lab.com";
+    window.location.href = 'https://www.fun4lab.com';
   }
 });
 
 function nextStep() {
-  window.location.href = "/congrat/" + payload.token + "/" + payload.gameId + "/" + payload.recordId;
+  window.location.href =
+    '/congrat/' + payload.token + '/' + payload.gameId + '/' + payload.recordId;
 }
 
 function getUrlVars() {
   var vars = [],
     hash;
-  var hashes = window.location.href.slice(window.location.href.indexOf("?") + 1).split("&");
+  var hashes = window.location.href
+    .slice(window.location.href.indexOf('?') + 1)
+    .split('&');
   for (var i = 0; i < hashes.length; i++) {
-    hash = hashes[i].split("=");
+    hash = hashes[i].split('=');
     vars.push(hash[0]);
     vars[hash[0]] = hash[1];
   }
