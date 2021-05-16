@@ -9,7 +9,8 @@ const LOADING_CIRCLE = document.getElementById('loading_circle');
 const FRONT_FRAME = document.getElementById('front_frame');
 
 const GIF_TEMP = [];
-const gif = null;
+let gif = null;
+let currentMovingSticker = null;
 
 const $round = document.querySelector('#percentage .round');
 const roundRadius = Number(
@@ -373,3 +374,84 @@ $('.frame-select').on('click', function (e) {
     e.target.innerText = NO_BG_REMOVE.value ? '開啟去背' : '關閉去背';
   }
 });
+
+$('.sticker').on('click', (e) => {
+  const origin_el = e.target;
+  const newSticker = document.createElement('img');
+  newSticker.src = origin_el.src;
+  newSticker.width = origin_el.clientWidth;
+  newSticker.height = origin_el.clientHeight;
+  $('.sticker_on').removeClass('front_sticker');
+  newSticker.classList.add('sticker_on');
+  newSticker.classList.add('front_sticker');
+  const style = {
+    position: 'absolute',
+    top: `${STICKER_AREA.height / 2 - origin_el.clientHeight / 2}px`,
+    left: `${STICKER_AREA.width / 2 - origin_el.clientWidth / 2}px`
+  };
+  Object.keys(style).forEach((prop) => {
+    newSticker.style[prop] = style[prop];
+  });
+
+  STICKER_AREA.appendChild(newSticker);
+  newSticker.addEventListener('dragstart', (e) => {
+    e.preventDefault();
+  });
+  newSticker.addEventListener('mousedown', () => {
+    $('.sticker_on').removeClass('front_sticker');
+    newSticker.classList.add('front_sticker');
+    currentMovingSticker = newSticker;
+  });
+  newSticker.addEventListener('wheel', handleStickerWheel);
+});
+
+function handleStickerWheel(e) {
+  const { deltaY, target } = e;
+  if (deltaY === 0) return;
+  const isZoom = Math.sign(deltaY) < 0;
+  const originWidth = target.width;
+  const originHeight = target.height;
+  const zoomRatio = 1.15;
+  if (isZoom) {
+    target.width *= zoomRatio;
+    target.height *= zoomRatio;
+  } else {
+    target.width /= zoomRatio;
+    target.height /= zoomRatio;
+  }
+
+  const style = {
+    left: `${
+      Number(target.style.left.replace('px', '')) +
+      (originWidth - target.width) / 2
+    }px`,
+    top: `${
+      Number(target.style.top.replace('px', '')) +
+      (originHeight - target.height) / 2
+    }px`
+  };
+  Object.keys(style).forEach((prop) => {
+    target.style[prop] = style[prop];
+  });
+}
+
+STICKER_AREA.addEventListener('mousemove', moveSticker);
+STICKER_AREA.addEventListener('mouseup', () => {
+  currentMovingSticker = null;
+});
+
+function moveSticker(e) {
+  e.stopPropagation();
+  if (currentMovingSticker === null) return;
+  const { x, y } = STICKER_AREA.getBoundingClientRect();
+  const { clientX, clientY } = e;
+  const moveX = clientX - x;
+  const moveY = clientY - y;
+  const style = {
+    left: `${moveX - currentMovingSticker.clientWidth / 2}px`,
+    top: `${moveY - currentMovingSticker.clientHeight / 2}px`
+  };
+  Object.keys(style).forEach((prop) => {
+    currentMovingSticker.style[prop] = style[prop];
+  });
+}

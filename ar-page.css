@@ -62,6 +62,32 @@ body {
   height: 100%;
 }
 
+.sticker_control {
+  width: 100%;
+  max-width: 480px;
+  height: 80px;
+  /* background-color: rgb(140, 140, 140); */
+  margin-top: 10px;
+  border-radius: 5px;
+  padding: 0 24px;
+
+  overflow-x: auto;
+  display: flex;
+  z-index: 9;
+}
+
+.sticker {
+  height: 100%;
+}
+
+.sticker + .sticker {
+  margin-left: 32px;
+}
+
+.front_sticker {
+  z-index: 1;
+}
+
 /*  */
 .ar-filter {
   position: relative;

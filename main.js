@@ -5,6 +5,8 @@ const BG_REMOVE_CANVAS = document.getElementById('bgRemove');
 const bgRemoveCanvasctx = BG_REMOVE_CANVAS.getContext('2d');
 const jeeFaceFilterCanvas = document.getElementById('jeeFaceFilterCanvas');
 
+const STICKER_AREA = document.getElementById('sticker_area');
+
 const videoElement = document.getElementById('videoElement');
 
 const NO_BG_REMOVE = {
@@ -39,10 +41,11 @@ function show(el) {
 }
 
 function resize() {
-  jeeFaceFilterCanvas.width = MAIN_WRAP.clientWidth;
-  jeeFaceFilterCanvas.height = MAIN_WRAP.clientHeight;
-  BG_REMOVE_CANVAS.width = MAIN_WRAP.clientWidth;
-  BG_REMOVE_CANVAS.height = MAIN_WRAP.clientHeight;
+  const elements = [jeeFaceFilterCanvas, BG_REMOVE_CANVAS, STICKER_AREA];
+  elements.forEach((el) => {
+    el.width = MAIN_WRAP.clientWidth;
+    el.height = MAIN_WRAP.clientHeight;
+  });
 }
 resize();
 
@@ -226,10 +229,10 @@ function loadBodyPix(e, stream = STREAM) {
   videoElement.height = videoElement.height || streamSetting.height;
 
   if (!NO_BG_REMOVE.value) {
-    bodyPix.load().then((res) => {
-      net = res;
-      main();
-    });
+    // bodyPix.load().then((res) => {
+    //   net = res;
+    //   main();
+    // });
   } else {
     main();
   }

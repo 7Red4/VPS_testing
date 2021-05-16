@@ -22,8 +22,13 @@
     <script src="./helpers/JeelizResizer.js"></script>
     <script src="./helpers/JeelizThreeHelper.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.2"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/body-pix@2.0"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/body-pix@2.0"></script> -->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"
+      integrity="sha512-UXumZrZNiOwnTcZSHLOfcTs0aos2MzBWHXOHOuB0J/R44QB0dwY5JgfbvljXcklVf65Gc4El6RjZ+lnwd2az2g=="
+      crossorigin="anonymous"
+    ></script>
     <link rel="stylesheet" href="./css/index.css" />
     <link rel="stylesheet" href="./css/loader.css" />
     <link rel="stylesheet" href="./css/ui_controlls.css" />
@@ -47,8 +52,8 @@
                 class="canvas canvas_mask"
               ></canvas>
               <img id="front_frame" />
+
               <div class="switch-frame hide">
-                <div class="frame-select" target="removeBGswitch">開啟去背</div>
                 <div style="flex: 1"></div>
                 <div class="frame-select" target="1">F1</div>
                 <div class="frame-select" target="2">F2</div>
@@ -117,9 +122,22 @@
                 <img src="./icons/save_alt.svg" style="width: 100%" />
               </a>
             </div>
+            <div id="sticker_area"></div>
           </div>
           <!-- web ar template END -->
         </div>
+
+        <div class="sticker_control">
+          <img src="./assets//stickers/sticker-1.png" class="sticker" />
+          <img src="./assets//stickers/sticker-2.png" class="sticker" />
+          <img src="./assets//stickers/sticker-3.png" class="sticker" />
+          <img src="./assets//stickers/sticker-4.png" class="sticker" />
+          <img src="./assets//stickers/sticker-5.png" class="sticker" />
+          <img src="./assets//stickers/sticker-6.png" class="sticker" />
+          <img src="./assets//stickers/sticker-7.png" class="sticker" />
+          <img src="./assets//stickers/sticker-8.png" class="sticker" />
+        </div>
+
         <div class="ar-control-ui">
           <div id="ar-photo" class="ar-photo" onclick="generatePicture()">
             Take photo

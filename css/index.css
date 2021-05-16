@@ -25,6 +25,16 @@
   z-index: 2;
 }
 
+#MAIN_WRAP #sticker_area {
+  overflow: hidden;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+}
+
 #MAIN_WRAP .container {
   position: relative;
   width: 100%;
@@ -32,7 +42,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-image: url("./background.png");
+  background-image: url('./background.png');
   background-size: cover;
   background-position: center;
 }
