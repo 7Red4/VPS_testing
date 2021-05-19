@@ -1,5 +1,9 @@
 // canvas - bgFilter;
 // jeeFaceFilterCanvas - jeeFaceFilterCanvas;
+window.isMobile = {
+  get() {}
+};
+
 const SHUTTER = document.getElementById('btn_shutter');
 const CLOSE = document.getElementById('btn_close');
 const SAVE = document.getElementById('btn_save');
@@ -405,33 +409,47 @@ $('.sticker').on('click', (e) => {
   newSticker.addEventListener('wheel', handleStickerWheel);
 });
 
+function resgisterHammer(el) {
+  const hammertime = new Hammer(el);
+  hammertime.get('pinch').set({ enable: true });
+  hammertime.on('pinch', function (e) {
+    const scale = Math.max(0.999, Math.min(last_scale * e.scale, 4));
+    doZoom(currentMovingSticker || $('.front_sticker')[0], false, scale > 0);
+  });
+}
+
+resgisterHammer(STICKER_AREA);
+
 function handleStickerWheel(e) {
   const { deltaY, target } = e;
   if (deltaY === 0) return;
   const isZoom = Math.sign(deltaY) < 0;
-  const originWidth = target.width;
-  const originHeight = target.height;
-  const zoomRatio = 1.15;
+
+  doZoom(target, isZoom);
+}
+
+function doZoom(el, isZoom, isPinch) {
+  const originWidth = el.width;
+  const originHeight = el.height;
+  const zoomRatio = isPinch ? 1.01 : 1.15;
   if (isZoom) {
-    target.width *= zoomRatio;
-    target.height *= zoomRatio;
+    el.width *= zoomRatio;
+    el.height *= zoomRatio;
   } else {
-    target.width /= zoomRatio;
-    target.height /= zoomRatio;
+    el.width /= zoomRatio;
+    el.height /= zoomRatio;
   }
 
   const style = {
     left: `${
-      Number(target.style.left.replace('px', '')) +
-      (originWidth - target.width) / 2
+      Number(el.style.left.replace('px', '')) + (originWidth - el.width) / 2
     }px`,
     top: `${
-      Number(target.style.top.replace('px', '')) +
-      (originHeight - target.height) / 2
+      Number(el.style.top.replace('px', '')) + (originHeight - el.height) / 2
     }px`
   };
   Object.keys(style).forEach((prop) => {
-    target.style[prop] = style[prop];
+    el.style[prop] = style[prop];
   });
 }
 
