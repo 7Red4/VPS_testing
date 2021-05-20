@@ -167,3 +167,15 @@
   color: #000;
   background-color: #fff;
 }
+
+#MAIN_WRAP .delete_sticker_btn {
+  position: absolute;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+}
+
+#MAIN_WRAP .front_sticker {
+  background-color: #ffffff55;
+}

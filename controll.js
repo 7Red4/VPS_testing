@@ -21,9 +21,14 @@ const roundRadius = Number(
   document.querySelector('#percentage .round circle').getAttribute('r')
 );
 
+let IS_PINCHING = false;
+
 let GIF_timer = null;
 let currentResult = {};
 let uploaded = {};
+let currentMovinOriginX = 0;
+let currentMovinOriginY = 0;
+let currentRotateDeg = 0;
 
 const BG_IMAGE = new Image();
 BG_IMAGE.src = 'background.png';
@@ -385,6 +390,9 @@ $('.sticker').on('click', (e) => {
   newSticker.src = origin_el.src;
   newSticker.width = origin_el.clientWidth;
   newSticker.height = origin_el.clientHeight;
+  newSticker.originWidth = origin_el.clientWidth;
+  newSticker.originHeight = origin_el.clientHeight;
+  newSticker.aspecratio = origin_el.clientWidth / origin_el.clientHeight;
   $('.sticker_on').removeClass('front_sticker');
   newSticker.classList.add('sticker_on');
   newSticker.classList.add('front_sticker');
@@ -396,6 +404,10 @@ $('.sticker').on('click', (e) => {
   Object.keys(style).forEach((prop) => {
     newSticker.style[prop] = style[prop];
   });
+  newSticker.style.transform = `rotate(0deg)`;
+  $('#StickerRotateValue')[0].value = 0;
+  $('.sticker_control-rotate').show();
+  $('.delete_sticker_btn').show();
 
   STICKER_AREA.appendChild(newSticker);
   newSticker.addEventListener('dragstart', (e) => {
@@ -404,17 +416,79 @@ $('.sticker').on('click', (e) => {
   newSticker.addEventListener('mousedown', () => {
     $('.sticker_on').removeClass('front_sticker');
     newSticker.classList.add('front_sticker');
+    $('#StickerRotateValue')[0].value = getRotateDeg(newSticker);
+    $('.sticker_control-rotate').show();
+    $('.delete_sticker_btn').show();
     currentMovingSticker = newSticker;
   });
   newSticker.addEventListener('wheel', handleStickerWheel);
 });
 
+$('#StickerRotateValue').on('input', (e) => {
+  currentRotateDeg = e.target.value;
+  const el = currentMovingSticker || $('.front_sticker')[0];
+  if (!el) return;
+  el.style.transform = `rotate(${currentRotateDeg}deg)`;
+});
+
+function getRotateDeg(el) {
+  const st = window.getComputedStyle(el, null);
+  const tr =
+    st.getPropertyValue('-webkit-transform') ||
+    st.getPropertyValue('-moz-transform') ||
+    st.getPropertyValue('-ms-transform') ||
+    st.getPropertyValue('-o-transform') ||
+    st.getPropertyValue('transform') ||
+    'FAIL';
+
+  if (tr === 'FAIL') return 0;
+
+  const values = tr.split('(')[1].split(')')[0].split(',');
+  const a = values[0];
+  const b = values[1];
+  const c = values[2];
+  const d = values[3];
+
+  const angle = Math.round(Math.atan2(b, a) * (180 / Math.PI));
+
+  return angle;
+}
+
+$('.delete_sticker_btn').on('click', (e) => {
+  $('.front_sticker').remove();
+  $('.sticker_control-rotate').hide();
+  $('.delete_sticker_btn').hide();
+  currentMovingSticker = null;
+  currentMovinOriginX = 0;
+  currentMovinOriginY = 0;
+  currentRotateDeg = 0;
+});
+
 function resgisterHammer(el) {
   const hammertime = new Hammer(el);
   hammertime.get('pinch').set({ enable: true });
-  hammertime.on('pinch', function (e) {
-    const scale = Math.max(0.999, Math.min(last_scale * e.scale, 4));
-    doZoom(currentMovingSticker || $('.front_sticker')[0], false, scale > 0);
+  hammertime.on('panstart', (e) => {
+    const el = currentMovingSticker || $('.front_sticker')[0];
+    if (!el) return;
+    currentMovinOriginX = Number(el.style.left.replace('px', ''));
+    currentMovinOriginY = Number(el.style.top.replace('px', ''));
+  });
+  hammertime.on('pinchstart', () => {
+    IS_PINCHING = true;
+  });
+  hammertime.on('pinchend', () => {
+    setTimeout(() => {
+      IS_PINCHING = false;
+    }, 120);
+  });
+  hammertime.on('pan pinch rotate', (e) => {
+    if (e.pointerType === 'mouse') return;
+    if (e.type === 'pan') {
+      if (IS_PINCHING) return;
+      panSticker(currentMovingSticker || $('.front_sticker')[0], e);
+    } else if (e.type === 'pinch') {
+      doZoom(currentMovingSticker || $('.front_sticker')[0], e.scale > 1, true);
+    }
   });
 }
 
@@ -428,24 +502,72 @@ function handleStickerWheel(e) {
   doZoom(target, isZoom);
 }
 
-function doZoom(el, isZoom, isPinch) {
-  const originWidth = el.width;
-  const originHeight = el.height;
-  const zoomRatio = isPinch ? 1.01 : 1.15;
-  if (isZoom) {
-    el.width *= zoomRatio;
-    el.height *= zoomRatio;
-  } else {
-    el.width /= zoomRatio;
-    el.height /= zoomRatio;
+function panSticker(el, e) {
+  if (!el) return;
+  const { deltaX, deltaY } = e;
+  const moveX = currentMovinOriginX + deltaX;
+  const moveY = currentMovinOriginY + deltaY;
+  const limitedBoundary = 12;
+  const half_w = el.clientWidth / 2;
+  const half_h = el.clientHeight / 2;
+
+  if (moveX + half_w < limitedBoundary || moveY + half_h < limitedBoundary)
+    return;
+  if (
+    moveX - half_w >
+      STICKER_AREA.clientWidth - el.clientWidth - limitedBoundary ||
+    moveY - half_h >
+      STICKER_AREA.clientHeight - el.clientHeight - limitedBoundary
+  ) {
+    return;
   }
+  const style = {
+    left: `${moveX}px`,
+    top: `${moveY}px`
+  };
+  Object.keys(style).forEach((prop) => {
+    el.style[prop] = style[prop];
+  });
+}
+
+function doZoom(el, isZoom, isPinch) {
+  if (!el) return;
+  const originWidth = el.originWidth;
+  const originHeight = el.originHeight;
+  const currentW = el.width;
+  const currentH = el.height;
+  const zoomRatio = isPinch ? 1.05 : 1.12;
+  let scaledW = 0,
+    scaledH = 0;
+  if (isZoom) {
+    scaledW = el.width * zoomRatio;
+    scaledH = el.height * zoomRatio;
+  } else {
+    scaledW = el.width / zoomRatio;
+    scaledH = el.height / zoomRatio;
+  }
+
+  const maxScale = 4.5;
+  const minScale = 0.7;
+
+  if (!originWidth || !originHeight) return;
+  if (isZoom) {
+    if (scaledW > originWidth * maxScale || scaledH > originHeight * maxScale)
+      return;
+  } else {
+    if (scaledW < originWidth * minScale || scaledH < originHeight * minScale)
+      return;
+  }
+
+  el.width = scaledW;
+  el.height = scaledW / el.aspecratio;
 
   const style = {
     left: `${
-      Number(el.style.left.replace('px', '')) + (originWidth - el.width) / 2
+      Number(el.style.left.replace('px', '')) + (currentW - el.width) / 2
     }px`,
     top: `${
-      Number(el.style.top.replace('px', '')) + (originHeight - el.height) / 2
+      Number(el.style.top.replace('px', '')) + (currentH - el.height) / 2
     }px`
   };
   Object.keys(style).forEach((prop) => {

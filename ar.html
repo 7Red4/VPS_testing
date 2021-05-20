@@ -125,9 +125,18 @@
                 <img src="./icons/save_alt.svg" style="width: 100%" />
               </a>
             </div>
-            <div id="sticker_area"></div>
+            <div id="sticker_area">
+              <div class="delete_sticker_btn btn" style="display: none">
+                刪除貼紙
+              </div>
+            </div>
           </div>
           <!-- web ar template END -->
+        </div>
+
+        <div class="sticker_control-rotate" style="display: none">
+          旋轉：
+          <input id="StickerRotateValue" type="range" min="-180" max="180" />
         </div>
 
         <div class="sticker_control">
