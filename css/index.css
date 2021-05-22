@@ -72,12 +72,18 @@
 }
 
 .sticker_control-rotate {
-  width: 320px;
+  max-width: 349px;
+  width: 100%;
   margin: 8px 0;
 }
 
-input[type='range'] {
+.sticker-controller-panel{
   width: 100%;
+  max-width: 320px;
+}
+
+input[type='range'] {
+  width: 77%;
   margin: 7.3px 0;
   background-color: transparent;
   -webkit-appearance: none;
