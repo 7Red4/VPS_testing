@@ -59,24 +59,26 @@ body {
   align-items: center;
   width: 50%;
   height: 100%;
+  display: none;
 }
 
 .sticker_control {
   width: 100%;
-  max-width: 480px;
+  max-width: 357px;
   height: 80px;
   /* background-color: rgb(140, 140, 140); */
   margin-top: 10px;
   border-radius: 5px;
   padding: 0 24px;
-
+  background-color: #EEE;
   overflow-x: auto;
   display: flex;
+  align-items: center;
   z-index: 9;
 }
 
 .sticker {
-  height: 100%;
+  height: 80%;
 }
 
 .sticker + .sticker {
