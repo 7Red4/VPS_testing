@@ -112,6 +112,7 @@
                 >
                   <circle cx="50" cy="50" r="40" />
                 </svg>
+                <span id="counter_digit"></span>
               </div>
               <div id="btn_shutter">
                 <img src="./icons/gif.svg" style="width: 100%" />
@@ -125,7 +126,8 @@
                 <img src="./icons/save_alt.svg" style="width: 100%" />
               </a>
             </div>
-            <div id="sticker_area"></div>
+            <div id="sticker_area" class="hide">
+            </div>
           </div>
           <!-- web ar template END -->
         </div>
@@ -137,9 +139,17 @@
             Rotation:
             <input id="StickerRotateValue" type="range" min="-180" max="180" />
           </div>
+          大小：
+          <input
+            id="StickerScaleValue"
+            type="range"
+            min="7"
+            max="45"
+            value="10"
+          />
         </div>
 
-        <div class="sticker_control">
+        <div class="sticker_control" style="display: none">
           <img src="./assets//stickers/sticker-1.png" class="sticker" />
           <img src="./assets//stickers/sticker-2.png" class="sticker" />
           <img src="./assets//stickers/sticker-3.png" class="sticker" />

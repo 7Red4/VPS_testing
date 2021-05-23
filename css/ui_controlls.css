@@ -38,6 +38,15 @@
   align-items: center;
   justify-content: center;
 }
+#MAIN_WRAP #counter_digit {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #fff;
+  text-shadow: #000000;
+  font-size: 48px;
+}
 #MAIN_WRAP .round {
   transform: rotate(-90deg);
   /* SVG */

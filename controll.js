@@ -13,6 +13,7 @@ const LOADING_CIRCLE = document.getElementById('loading_circle');
 const FRONT_FRAME = document.getElementById('front_frame');
 
 const GIF_TEMP = [];
+const GIF_TEMP_REAL = [];
 let gif = null;
 let currentMovingSticker = null;
 
@@ -20,6 +21,7 @@ const $round = document.querySelector('#percentage .round');
 const roundRadius = Number(
   document.querySelector('#percentage .round circle').getAttribute('r')
 );
+const COUNTER_DIGIT = document.getElementById('counter_digit');
 
 let IS_PINCHING = false;
 
@@ -161,7 +163,6 @@ function setPercent(per) {
   const roundCircum = 2 * roundRadius * Math.PI;
   const roundDraw = (p * roundCircum) / 100;
   $round.style['stroke-dasharray'] = roundDraw + ' 999';
-  console.log(p);
 }
 
 const getPictureURL = ({ toGIF, index } = {}) => {
@@ -214,6 +215,7 @@ const getPictureURL = ({ toGIF, index } = {}) => {
 
     if (toGIF) {
       GIF_TEMP.push(forShowResult);
+      GIF_TEMP_REAL.push(forRealResult);
       if (index === 3) {
         render_GIF();
         resolve();
@@ -256,6 +258,7 @@ async function generateGIF() {
   clearInterval(GIF_timer);
   GIF_timer = null;
   let counter = 0;
+  let index = 0;
 
   function end() {
     GO_LOADING();
@@ -268,24 +271,41 @@ async function generateGIF() {
     hide(document.getElementById('percentage'));
   }
 
-  function add(count) {
-    const index = count / 1000 + 1;
+  function add() {
     getPictureURL({ toGIF: true, index });
   }
 
   show(document.getElementById('percentage'));
 
+  const tickerTime = 10;
   GIF_timer = setInterval(() => {
     setPercent(counter / 10);
-    if (counter === 0 || counter === 1000 || counter === 2000) {
+    if (!Boolean(counter % 1000) && counter) {
+      const sec = counter / 1000;
+      console.log(sec);
+
+      if (sec > 3) {
+        let dispaySec = 2;
+        sec === 4 && (dispaySec = 2);
+        sec === 5 && (dispaySec = 1);
+        sec === 6 && (dispaySec = 2);
+        sec === 7 && (dispaySec = 1);
+        sec === 8 && (dispaySec = '');
+        COUNTER_DIGIT.innerText = dispaySec;
+      } else {
+        COUNTER_DIGIT.innerText = 4 - sec;
+      }
+    }
+    if (counter === 4000 || counter === 6000 || counter === 8000) {
       console.log('GO');
+      index++;
       add(counter);
     }
-    if (counter >= 2000) {
+    if (counter >= 8000) {
       end();
     }
-    counter += 10;
-  }, 2);
+    counter += tickerTime;
+  }, tickerTime);
 }
 
 function render_GIF() {
@@ -366,6 +386,10 @@ function closeResult() {
   $('.ar-gif').show();
   $('.ar-next').hide();
   $('.ar-result').hide();
+  $('.switch-frame').removeClass('hide');
+  cleanUpStickerArea();
+  hide(STICKER_AREA);
+  $('.sticker_control').hide();
 }
 
 function showResult() {
@@ -373,6 +397,9 @@ function showResult() {
   $('.ar-gif').hide();
   $('.ar-next').show();
   $('.ar-result').show();
+  $('.switch-frame').addClass('hide');
+  show(STICKER_AREA);
+  $('.sticker_control').show();
 }
 
 $('.frame-select').on('click', function (e) {
@@ -383,6 +410,10 @@ $('.frame-select').on('click', function (e) {
     e.target.innerText = NO_BG_REMOVE.value ? '開啟去背' : '關閉去背';
   }
 });
+
+function cleanUpStickerArea() {
+  $('.sticker_on').remove();
+}
 
 $('.sticker').on('click', (e) => {
   const origin_el = e.target;
@@ -406,7 +437,7 @@ $('.sticker').on('click', (e) => {
   });
   newSticker.style.transform = `rotate(0deg)`;
   $('#StickerRotateValue')[0].value = 0;
-  $('.sticker_control-rotate').show();
+  $('.sticker_control-values').show();
   $('.delete_sticker_btn').show();
 
   STICKER_AREA.appendChild(newSticker);
@@ -417,7 +448,7 @@ $('.sticker').on('click', (e) => {
     $('.sticker_on').removeClass('front_sticker');
     newSticker.classList.add('front_sticker');
     $('#StickerRotateValue')[0].value = getRotateDeg(newSticker);
-    $('.sticker_control-rotate').show();
+    $('.sticker_control-values').show();
     $('.delete_sticker_btn').show();
     currentMovingSticker = newSticker;
   });
@@ -456,7 +487,7 @@ function getRotateDeg(el) {
 
 $('.delete_sticker_btn').on('click', (e) => {
   $('.front_sticker').remove();
-  $('.sticker_control-rotate').hide();
+  $('.sticker_control-values').hide();
   $('.delete_sticker_btn').hide();
   currentMovingSticker = null;
   currentMovinOriginX = 0;
@@ -553,11 +584,14 @@ function doZoom(el, isZoom, isPinch) {
   if (!originWidth || !originHeight) return;
   if (isZoom) {
     if (scaledW > originWidth * maxScale || scaledH > originHeight * maxScale)
-      return;
+      scaledW = originWidth * maxScale;
   } else {
     if (scaledW < originWidth * minScale || scaledH < originHeight * minScale)
-      return;
+      scaledW = originWidth * minScale;
   }
+
+  const modifiedScale = (scaledW / originWidth).toFixed(1) * 10;
+  $('#StickerScaleValue')[0].value = modifiedScale;
 
   el.width = scaledW;
   el.height = scaledW / el.aspecratio;
@@ -574,6 +608,30 @@ function doZoom(el, isZoom, isPinch) {
     el.style[prop] = style[prop];
   });
 }
+
+$('#StickerScaleValue').on('input', (e) => {
+  const scale = Number(e.target.value) * 0.1;
+  const el = currentMovingSticker || $('.front_sticker')[0];
+  const originWidth = el.originWidth;
+  const originHeight = el.originHeight;
+  const currentW = el.width;
+  const currentH = el.height;
+
+  el.width = originWidth * scale;
+  el.height = el.width / el.aspecratio;
+
+  const style = {
+    left: `${
+      Number(el.style.left.replace('px', '')) + (currentW - el.width) / 2
+    }px`,
+    top: `${
+      Number(el.style.top.replace('px', '')) + (currentH - el.height) / 2
+    }px`
+  };
+  Object.keys(style).forEach((prop) => {
+    el.style[prop] = style[prop];
+  });
+});
 
 STICKER_AREA.addEventListener('mousemove', moveSticker);
 STICKER_AREA.addEventListener('mouseup', () => {
@@ -595,3 +653,132 @@ function moveSticker(e) {
     currentMovingSticker.style[prop] = style[prop];
   });
 }
+
+function degrees_to_radians(degrees) {
+  const pi = Math.PI;
+  return degrees * (pi / 180);
+}
+
+function radians_to_degrees(radians) {
+  const pi = Math.PI;
+  return Math.round(radians / (pi / 180));
+}
+
+function drawSticker() {
+  const src = RENDER_PICTURE.style.backgroundImage
+    .replace('url(', '')
+    .replace(')', '')
+    .replace(/\"/gi, '');
+
+  const stickers = $('.sticker_on');
+
+  if (stickers.length) {
+    const img = new Image();
+    img.onload = () => {
+      const result = document.createElement('canvas');
+      const context = result.getContext('2d');
+      result.width = MAIN_WRAP.clientWidth;
+      result.height = MAIN_WRAP.clientHeight;
+
+      // drawing layer by layer
+      drawImageProp(context, img);
+
+      stickers.each((i, el) => {
+        const angle_deg = getRotateDeg(el);
+        const angle = degrees_to_radians(angle_deg);
+        const r = Math.sqrt(
+          Math.pow(el.width / 2, 2) + Math.pow(el.height / 2, 2)
+        );
+        const cross_angle = -Math.tan(el.width, el.height);
+        const cross_angle_deg = radians_to_degrees(cross_angle);
+        const offset_angle = degrees_to_radians(cross_angle_deg + angle_deg);
+        const ox = r * Math.cos(cross_angle);
+        const oy = r * Math.sin(cross_angle);
+        const ax = r * Math.cos(offset_angle);
+        const ay = r * Math.sin(offset_angle);
+
+        const dx = ax - ox;
+        const dy = ay - oy;
+        console.log(dx, dy);
+
+        const x = Number(el.style.left.replace('px', ''));
+        const y = Number(el.style.top.replace('px', ''));
+        context.translate(x, y);
+        context.rotate(angle);
+        context.translate(-dx, -dy);
+
+        context.drawImage(el, 0, 0, el.width, el.height);
+
+        context.translate(-x, -y);
+        context.translate(dx, dy);
+        context.rotate(-angle);
+        console.log({
+          cross_angle,
+          cross_angle_deg,
+          offset_angle,
+          ox,
+          oy,
+          ax,
+          ay,
+          dx,
+          dy
+        });
+      });
+
+      const url = result.toDataURL('image/png');
+      // console.log(url);
+      // open(url, '_blank');
+    };
+
+    img.src = src;
+  }
+}
+
+/**
+ * function getStickerCanvas(){
+    var sc = $("<canvas>")[0];
+    var sctx = sc.getContext("2d");
+
+    sc.width = $(".stickers")[0].offsetWidth * 2;
+    sc.height = $(".stickers")[0].offsetHeight * 2;
+
+    var stickers = $(".sticker");
+    for(var i=0;i<stickers.length;i++) {
+        var img = stickers[i];
+        // console.log(img);
+        var element = img,
+        style = window.getComputedStyle(element),
+        width = Number(style.getPropertyValue('width').slice(0,-2)) * 2,
+        height = Number(style.getPropertyValue('height').slice(0,-2)) * 2,
+        trans = style.getPropertyValue('transform');
+        var mat = trans.substr(7);
+        mat = mat.slice(0, -1);
+        mat = mat.split(",");
+        for(var j=0;j<6;j++){
+            mat[j] = Number(mat[j]);
+        }
+        var transform = transformData;
+
+        // $(".sticker-log")[0].innerText = [transform.angle];
+
+        // ctx.transform(mat[0],mat[1],mat[2],mat[3],0,0);
+
+        // sctx.translate(width/2, height/2);
+        // sctx.translate(transform.translate.x, transform.translate.y);
+        // var rad = transform.angle * Math.PI / 180;
+        // sctx.rotate(rad);
+        // sctx.scale(transform.scale, transform.scale);
+        // sctx.translate(-transform.translate.x, -transform.translate.y);
+        // sctx.translate(-width/2, -height/2);
+        // sctx.drawImage(img, transform.translate.x, transform.translate.y, width, height);
+
+        sctx.save();
+        sctx.translate(width/2, height/2);
+        sctx.transform(mat[0],mat[1],mat[2],mat[3],mat[4]*2,mat[5]*2);
+        sctx.translate(-width/2, -height/2);
+        sctx.drawImage(img, 0,0, width, height);
+        sctx.restore();
+    }
+    return sc;
+}
+ */
