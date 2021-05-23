@@ -437,7 +437,7 @@ $('.sticker').on('click', (e) => {
   });
   newSticker.style.transform = `rotate(0deg)`;
   $('#StickerRotateValue')[0].value = 0;
-  $('.sticker_control-values').show();
+  $('.sticker-controller-panel').show();
   $('.delete_sticker_btn').show();
 
   STICKER_AREA.appendChild(newSticker);
@@ -448,7 +448,7 @@ $('.sticker').on('click', (e) => {
     $('.sticker_on').removeClass('front_sticker');
     newSticker.classList.add('front_sticker');
     $('#StickerRotateValue')[0].value = getRotateDeg(newSticker);
-    $('.sticker_control-values').show();
+    $('.sticker-controller-panel').show();
     $('.delete_sticker_btn').show();
     currentMovingSticker = newSticker;
   });
@@ -487,7 +487,7 @@ function getRotateDeg(el) {
 
 $('.delete_sticker_btn').on('click', (e) => {
   $('.front_sticker').remove();
-  $('.sticker_control-values').hide();
+  $('.sticker-controller-panel').hide();
   $('.delete_sticker_btn').hide();
   currentMovingSticker = null;
   currentMovinOriginX = 0;
@@ -664,74 +664,111 @@ function radians_to_degrees(radians) {
   return Math.round(radians / (pi / 180));
 }
 
-function drawSticker() {
-  const src = RENDER_PICTURE.style.backgroundImage
-    .replace('url(', '')
-    .replace(')', '')
-    .replace(/\"/gi, '');
+function drawSticker(test_angle) {
+  return new Promise((resolve) => {
+    const src = RENDER_PICTURE.style.backgroundImage
+      .replace('url(', '')
+      .replace(')', '')
+      .replace(/\"/gi, '');
 
-  const stickers = $('.sticker_on');
+    let url = '';
 
-  if (stickers.length) {
-    const img = new Image();
-    img.onload = () => {
-      const result = document.createElement('canvas');
-      const context = result.getContext('2d');
-      result.width = MAIN_WRAP.clientWidth;
-      result.height = MAIN_WRAP.clientHeight;
+    const stickers = $('.sticker_on');
 
-      // drawing layer by layer
-      drawImageProp(context, img);
+    if (stickers.length) {
+      const img = new Image();
+      img.onload = () => {
+        const result = document.createElement('canvas');
+        const context = result.getContext('2d');
+        result.width = MAIN_WRAP.clientWidth;
+        result.height = MAIN_WRAP.clientHeight;
 
-      stickers.each((i, el) => {
-        const angle_deg = getRotateDeg(el);
-        const angle = degrees_to_radians(angle_deg);
-        const r = Math.sqrt(
-          Math.pow(el.width / 2, 2) + Math.pow(el.height / 2, 2)
-        );
-        const cross_angle = -Math.tan(el.width, el.height);
-        const cross_angle_deg = radians_to_degrees(cross_angle);
-        const offset_angle = degrees_to_radians(cross_angle_deg + angle_deg);
-        const ox = r * Math.cos(cross_angle);
-        const oy = r * Math.sin(cross_angle);
-        const ax = r * Math.cos(offset_angle);
-        const ay = r * Math.sin(offset_angle);
+        // drawing layer by layer
+        drawImageProp(context, img);
 
-        const dx = ax - ox;
-        const dy = ay - oy;
-        console.log(dx, dy);
+        stickers.each((i, el) => {
+          const angle_deg = test_angle || getRotateDeg(el);
+          const angle = degrees_to_radians(angle_deg);
+          const r = Math.sqrt(
+            Math.pow(el.width / 2, 2) + Math.pow(el.height / 2, 2)
+          );
+          const cross_angle_deg = Math.floor(
+            Math.acos(el.width / (r * 2)) * (180 / Math.PI)
+          );
+          const cross_angle = degrees_to_radians(cross_angle_deg);
+          const offset_angle = degrees_to_radians(cross_angle_deg + angle_deg);
+          const ox = r * Math.cos(cross_angle);
+          const oy = r * Math.sin(cross_angle);
+          const ax = r * Math.cos(offset_angle);
+          const ay = r * Math.sin(offset_angle);
 
-        const x = Number(el.style.left.replace('px', ''));
-        const y = Number(el.style.top.replace('px', ''));
-        context.translate(x, y);
-        context.rotate(angle);
-        context.translate(-dx, -dy);
+          const dx = ax - ox;
+          const dy = ay - oy;
+          console.log(dx, dy);
 
-        context.drawImage(el, 0, 0, el.width, el.height);
+          const x = Number(el.style.left.replace('px', ''));
+          const y = Number(el.style.top.replace('px', ''));
+          context.translate(x, y);
+          context.rotate(angle);
+          context.translate(-dx, -dy);
 
-        context.translate(-x, -y);
-        context.translate(dx, dy);
-        context.rotate(-angle);
-        console.log({
-          cross_angle,
-          cross_angle_deg,
-          offset_angle,
-          ox,
-          oy,
-          ax,
-          ay,
-          dx,
-          dy
+          context.drawImage(el, 0, 0, el.width, el.height);
+
+          context.translate(-x, -y);
+          context.translate(dx, dy);
+          context.rotate(-angle);
         });
-      });
 
-      const url = result.toDataURL('image/png');
-      // console.log(url);
-      // open(url, '_blank');
-    };
+        url = result.toDataURL('image/png');
+        console.log(url);
 
-    img.src = src;
-  }
+        resolve(url);
+      };
+
+      img.src = src;
+    }
+  });
+}
+
+async function stickerTestCall() {
+  const temp = document.createElement('div');
+  const style = {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    backgroundColor: '#fafafafa',
+    dispay: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 99
+  };
+  Object.keys(style).forEach((prop) => {
+    temp.style[prop] = style[prop];
+  });
+  const close = document.createElement('button');
+  close.innerText = 'CLOSE';
+  const closeStyle = {
+    position: 'absolute',
+    top: '20px',
+    right: '20px'
+  };
+  Object.keys(closeStyle).forEach((prop) => {
+    close.style[prop] = closeStyle[prop];
+  });
+  close.onclick = () => {
+    $(temp).remove();
+  };
+
+  temp.appendChild(close);
+
+  $('body').append(temp);
+
+  temp.appendChild($(`<img src="${await drawSticker(0)}" />`)[0]);
+  temp.appendChild($(`<img src="${await drawSticker(30)}" />`)[0]);
+  temp.appendChild($(`<img src="${await drawSticker(60)}" />`)[0]);
+  temp.appendChild($(`<img src="${await drawSticker(90)}" />`)[0]);
 }
 
 /**
