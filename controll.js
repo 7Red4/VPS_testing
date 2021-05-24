@@ -689,33 +689,21 @@ function drawSticker(test_angle) {
         stickers.each((i, el) => {
           const angle_deg = test_angle || getRotateDeg(el);
           const angle = degrees_to_radians(angle_deg);
-          const r = Math.sqrt(
-            Math.pow(el.width / 2, 2) + Math.pow(el.height / 2, 2)
-          );
-          const cross_angle_deg = Math.floor(
-            Math.acos(el.width / (r * 2)) * (180 / Math.PI)
-          );
-          const cross_angle = degrees_to_radians(cross_angle_deg);
-          const offset_angle = degrees_to_radians(cross_angle_deg + angle_deg);
-          const ox = r * Math.cos(cross_angle);
-          const oy = r * Math.sin(cross_angle);
-          const ax = r * Math.cos(offset_angle);
-          const ay = r * Math.sin(offset_angle);
 
-          const dx = ax - ox;
-          const dy = ay - oy;
-          console.log(dx, dy);
-
-          const x = Number(el.style.left.replace('px', ''));
-          const y = Number(el.style.top.replace('px', ''));
+          const x = Number(el.style.left.replace('px', '')) + el.width / 2;
+          const y = Number(el.style.top.replace('px', '')) + el.height / 2;
           context.translate(x, y);
           context.rotate(angle);
-          context.translate(-dx, -dy);
 
-          context.drawImage(el, 0, 0, el.width, el.height);
+          context.drawImage(
+            el,
+            -el.width / 2,
+            -el.height / 2,
+            el.width,
+            el.height
+          );
 
           context.translate(-x, -y);
-          context.translate(dx, dy);
           context.rotate(-angle);
         });
 
@@ -730,92 +718,43 @@ function drawSticker(test_angle) {
   });
 }
 
-async function stickerTestCall() {
-  const temp = document.createElement('div');
-  const style = {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    backgroundColor: '#fafafafa',
-    dispay: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    zIndex: 99
-  };
-  Object.keys(style).forEach((prop) => {
-    temp.style[prop] = style[prop];
-  });
-  const close = document.createElement('button');
-  close.innerText = 'CLOSE';
-  const closeStyle = {
-    position: 'absolute',
-    top: '20px',
-    right: '20px'
-  };
-  Object.keys(closeStyle).forEach((prop) => {
-    close.style[prop] = closeStyle[prop];
-  });
-  close.onclick = () => {
-    $(temp).remove();
-  };
+// async function stickerTestCall() {
+//   const temp = document.createElement('div');
+//   const style = {
+//     position: 'fixed',
+//     top: 0,
+//     left: 0,
+//     width: '100%',
+//     height: '100%',
+//     backgroundColor: '#fafafafa',
+//     dispay: 'flex',
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//     zIndex: 99
+//   };
+//   Object.keys(style).forEach((prop) => {
+//     temp.style[prop] = style[prop];
+//   });
+//   const close = document.createElement('button');
+//   close.innerText = 'CLOSE';
+//   const closeStyle = {
+//     position: 'absolute',
+//     top: '20px',
+//     right: '20px'
+//   };
+//   Object.keys(closeStyle).forEach((prop) => {
+//     close.style[prop] = closeStyle[prop];
+//   });
+//   close.onclick = () => {
+//     $(temp).remove();
+//   };
 
-  temp.appendChild(close);
+//   temp.appendChild(close);
 
-  $('body').append(temp);
+//   $('body').append(temp);
 
-  temp.appendChild($(`<img src="${await drawSticker(0)}" />`)[0]);
-  temp.appendChild($(`<img src="${await drawSticker(30)}" />`)[0]);
-  temp.appendChild($(`<img src="${await drawSticker(60)}" />`)[0]);
-  temp.appendChild($(`<img src="${await drawSticker(90)}" />`)[0]);
-}
-
-/**
- * function getStickerCanvas(){
-    var sc = $("<canvas>")[0];
-    var sctx = sc.getContext("2d");
-
-    sc.width = $(".stickers")[0].offsetWidth * 2;
-    sc.height = $(".stickers")[0].offsetHeight * 2;
-
-    var stickers = $(".sticker");
-    for(var i=0;i<stickers.length;i++) {
-        var img = stickers[i];
-        // console.log(img);
-        var element = img,
-        style = window.getComputedStyle(element),
-        width = Number(style.getPropertyValue('width').slice(0,-2)) * 2,
-        height = Number(style.getPropertyValue('height').slice(0,-2)) * 2,
-        trans = style.getPropertyValue('transform');
-        var mat = trans.substr(7);
-        mat = mat.slice(0, -1);
-        mat = mat.split(",");
-        for(var j=0;j<6;j++){
-            mat[j] = Number(mat[j]);
-        }
-        var transform = transformData;
-
-        // $(".sticker-log")[0].innerText = [transform.angle];
-
-        // ctx.transform(mat[0],mat[1],mat[2],mat[3],0,0);
-
-        // sctx.translate(width/2, height/2);
-        // sctx.translate(transform.translate.x, transform.translate.y);
-        // var rad = transform.angle * Math.PI / 180;
-        // sctx.rotate(rad);
-        // sctx.scale(transform.scale, transform.scale);
-        // sctx.translate(-transform.translate.x, -transform.translate.y);
-        // sctx.translate(-width/2, -height/2);
-        // sctx.drawImage(img, transform.translate.x, transform.translate.y, width, height);
-
-        sctx.save();
-        sctx.translate(width/2, height/2);
-        sctx.transform(mat[0],mat[1],mat[2],mat[3],mat[4]*2,mat[5]*2);
-        sctx.translate(-width/2, -height/2);
-        sctx.drawImage(img, 0,0, width, height);
-        sctx.restore();
-    }
-    return sc;
-}
- */
+//   temp.appendChild($(`<img src="${await drawSticker(0)}" />`)[0]);
+//   temp.appendChild($(`<img src="${await drawSticker(30)}" />`)[0]);
+//   temp.appendChild($(`<img src="${await drawSticker(60)}" />`)[0]);
+//   temp.appendChild($(`<img src="${await drawSticker(90)}" />`)[0]);
+// }
