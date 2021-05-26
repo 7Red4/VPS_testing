@@ -17,13 +17,13 @@
   height: 100%;
   top: 0;
   left: 0;
-  background: linear-gradient(
+  /* background: linear-gradient(
     to top,
     #000000,
     #00000000 120px,
     #00000000 90%,
     #000000
-  );
+  ); */
   z-index: 2;
 }
 
