@@ -14,6 +14,15 @@ const STICKER_AREA = document.getElementById('sticker_area');
 
 const videoElement = document.getElementById('videoElement');
 
+const permission = {
+  _value: true,
+  get value() {
+    return !!this._value;
+  },
+  set value(v) {
+    this._value = !!v;
+  }
+};
 const NO_BG_REMOVE = {
   _value: true,
   get value() {
@@ -55,6 +64,10 @@ function resize() {
 resize();
 
 window.addEventListener('resize', resize);
+
+function changePermission(e) {
+  permission.value = e.target.checked;
+}
 
 window._3dObjs = {};
 function modelLoder(threeStuffs) {
@@ -314,8 +327,6 @@ $(document).ready(function () {
 });
 
 function nextStep() {
-  // window.location.href =
-  //   '/congrat/' + payload.token + '/' + payload.gameId + '/' + payload.recordId;
   getResult();
 }
 
@@ -331,4 +342,10 @@ function getUrlVars() {
     vars[hash[0]] = hash[1];
   }
   return vars;
+}
+
+function redirect() {
+  window.location.href = `/congrat/${payload.token}/${payload.gameId}/${
+    payload.recordId
+  }/${Number(permission.value)}`;
 }

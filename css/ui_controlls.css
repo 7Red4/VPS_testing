@@ -193,3 +193,49 @@
 #MAIN_WRAP .front_sticker {
   background-color: #ffffff55;
 }
+
+#modal {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+
+  background-color: rgba(0, 0, 0, 0.7);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  z-index: 99;
+}
+
+#modal .modal-container {
+  padding: 8px;
+  background-color: #fff;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.38);
+  max-width: 600px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: stretch;
+}
+
+#modal .modal-header {
+  padding: 8px;
+
+  font-size: 32px;
+  font-weight: bold;
+  display: flex;
+}
+
+#modal .modal-body {
+  padding: 8px;
+}
+
+#modal .modal-action {
+  display: flex;
+  justify-content: flex-end;
+  padding: 8px;
+}

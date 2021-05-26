@@ -74,7 +74,9 @@
                   </svg>
                 </div>
               </div>
-              <div id="load_btn" onclick="startVideoStream()">Access Camera</div>
+              <div id="load_btn" onclick="startVideoStream()">
+                Access Camera
+              </div>
             </div>
 
             <div id="ui_controlls" class="hide with_toolbar_showing">
@@ -164,7 +166,9 @@
             Take photo
           </div>
           <div id="ar-gif" class="ar-gif" onclick="generateGIF()">Take GIF</div>
-          <div id="ar-next" class="ar-next" onclick="nextStep()">Next Step</div>
+          <div id="ar-next" class="ar-next" onclick="nextStep()">
+            <span class="text">Next Step</span>
+          </div>
           <div id="ar-result" class="ar-result" onclick="closeResult()">
             Cancel
           </div>
@@ -185,6 +189,24 @@
       </div>
     </div>
 
+    <div id="modal" class="hide">
+      <div class="modal-container">
+        <div class="modal-header">Privacy agreement</div>
+        <div class="modal-body">
+          <label>
+            <input
+              type="checkbox"
+              onchange="changePermission(event)"
+              checked="true"
+            />
+            Agree to share your photo with the gallery？
+          </label>
+        </div>
+        <div class="modal-action">
+          <button onclick="redirect()">DONE</button>
+        </div>
+      </div>
+    </div>
     <!-- web ar controll scripts START -->
     <script src="./libs/gifjs/dist/gif.js"></script>
     <script src="./main.js"></script>

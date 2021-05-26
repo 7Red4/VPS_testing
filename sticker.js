@@ -322,6 +322,7 @@ async function getResult() {
 
 async function sendResult() {
   const isGIF = GIF_TEMP.length;
+  const responses = [];
 
   for (const key in currentResult) {
     const src = currentResult[key];
@@ -336,10 +337,11 @@ async function sendResult() {
       body: FD
     });
 
-    handleImageResponse(res);
+    responses.push(res);
   }
+  handleImageResponse(responses);
 }
 
-function handleImageResponse(res) {
-  console.log(res);
+function handleImageResponse(responses) {
+  show(document.getElementById('modal'));
 }
