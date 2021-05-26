@@ -326,21 +326,17 @@ async function sendResult() {
   for (const key in currentResult) {
     const src = currentResult[key];
     const FD = new FormData();
-    const img = new Image();
     FD.append('token', payload.token);
+    const img = await (await fetch(src)).blob();
 
-    img.onload = async () => {
-      FD.append('image', img);
+    FD.append('image', img);
 
-      const res = await fetch(key === 'forShow' ? URL_FOR_SHOW : URL_FOR_REAL, {
-        method: 'POST',
-        body: FD
-      });
+    const res = await fetch(key === 'forShow' ? URL_FOR_SHOW : URL_FOR_REAL, {
+      method: 'POST',
+      body: FD
+    });
 
-      handleImageResponse(res);
-    };
-
-    img.src = src;
+    handleImageResponse(res);
   }
 }
 
