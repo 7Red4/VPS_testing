@@ -225,7 +225,7 @@
 #modal .modal-header {
   padding: 8px;
 
-  font-size: 32px;
+  font-size: 20px;
   font-weight: bold;
   display: flex;
 }
@@ -238,4 +238,11 @@
   display: flex;
   justify-content: flex-end;
   padding: 8px;
+}
+
+#modal .modal-action button{
+  background-color:#d53228;
+  color: white;
+  border: none;
+  padding: 15px 20px;
 }
