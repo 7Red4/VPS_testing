@@ -67,17 +67,20 @@
   position: absolute;
 }
 
-#MAIN_WRAP .hide {
+.hide {
   display: none !important;
 }
 
-.sticker_control-rotate {
+.sticker_control-value {
   max-width: 349px;
   width: 100%;
   margin: 8px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.sticker-controller-panel{
+.sticker-controller-panel {
   width: 100%;
   max-width: 320px;
 }

@@ -55,14 +55,6 @@
                 class="canvas canvas_mask"
               ></canvas>
               <img id="front_frame" />
-
-              <div class="switch-frame hide">
-                <div style="flex: 1"></div>
-                <div class="frame-select" target="1">F1</div>
-                <div class="frame-select" target="2">F2</div>
-                <div class="frame-select" target="3">F3</div>
-                <div class="frame-select" target="4">-</div>
-              </div>
             </div>
             <video id="videoElement" hidden muted playsinline></video>
 
@@ -132,18 +124,20 @@
         </div>
         <div class="sticker-controller-panel" style="display: none">
           <div class="delete_sticker_btn btn">Remove Sticker</div>
-          <div class="sticker_control-rotate">
+          <div class="sticker_control-value">
             Rotation:
             <input id="StickerRotateValue" type="range" min="-180" max="180" />
           </div>
-          Scale：
-          <input
-            id="StickerScaleValue"
-            type="range"
-            min="7"
-            max="45"
-            value="10"
-          />
+          <div class="sticker_control-value">
+            Scale：
+            <input
+              id="StickerScaleValue"
+              type="range"
+              min="7"
+              max="45"
+              value="10"
+            />
+          </div>
         </div>
 
         <div class="sticker_control" style="display: none">
@@ -155,6 +149,12 @@
           <img src="./assets//stickers/sticker-6.png" class="sticker" />
           <img src="./assets//stickers/sticker-7.png" class="sticker" />
           <img src="./assets//stickers/sticker-8.png" class="sticker" />
+        </div>
+
+        <div class="switch-frame hide">
+          <div class="frame-select" target="1">F1</div>
+          <div class="frame-select" target="2">F2</div>
+          <div class="frame-select" target="3">F3</div>
         </div>
 
         <div class="ar-control-ui">
@@ -187,6 +187,7 @@
     <script src="./libs/gifjs/dist/gif.js"></script>
     <script src="./main.js"></script>
     <script src="./controll.js"></script>
+    <script src="./sticker.js"></script>
     <!-- web ar controll scripts END -->
   </body>
 </html>

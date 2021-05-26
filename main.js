@@ -1,5 +1,10 @@
 // "use strict";
 const MAIN_WRAP = document.getElementById('MAIN_WRAP');
+const URL_FOR_REAL =
+  'https://www.fun4lab.com/api/v1/virtual-photo-booth/upload/customer/product';
+
+const URL_FOR_SHOW =
+  'https://www.fun4lab.com/api/v1/virtual-photo-booth/upload/customer/only';
 
 const BG_REMOVE_CANVAS = document.getElementById('bgRemove');
 const bgRemoveCanvasctx = BG_REMOVE_CANVAS.getContext('2d');
