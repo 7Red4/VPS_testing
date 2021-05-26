@@ -330,7 +330,7 @@ async function sendResult() {
     const img = new Image();
     FD.append('token', payload.token);
 
-    img.onload = () => {
+    img.onload = async () => {
       FD.append('image', img);
 
       const res = await fetch(key === 'forShow' ? URL_FOR_SHOW : URL_FOR_REAL, {
