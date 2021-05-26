@@ -316,7 +316,7 @@ $(document).ready(function () {
 function nextStep() {
   // window.location.href =
   //   '/congrat/' + payload.token + '/' + payload.gameId + '/' + payload.recordId;
-  drawSticker();
+  getResult();
 }
 
 function getUrlVars() {

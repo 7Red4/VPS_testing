@@ -256,21 +256,18 @@ function radians_to_degrees(radians) {
 
 function drawSticker(src) {
   return new Promise((resolve) => {
-    let url = '';
-
     const stickers = $('.sticker_on');
 
-    if (stickers.length) {
-      const img = new Image();
-      img.onload = () => {
-        const result = document.createElement('canvas');
-        const context = result.getContext('2d');
-        result.width = MAIN_WRAP.clientWidth;
-        result.height = MAIN_WRAP.clientHeight;
+    const img = new Image();
+    img.onload = () => {
+      const result = document.createElement('canvas');
+      const context = result.getContext('2d');
+      result.width = MAIN_WRAP.clientWidth;
+      result.height = MAIN_WRAP.clientHeight;
 
-        // drawing layer by layer
-        drawImageProp(context, img);
-
+      // drawing layer by layer
+      drawImageProp(context, img);
+      if (stickers.length) {
         stickers.each((i, el) => {
           const angle_deg = getRotateDeg(el);
           const angle = degrees_to_radians(angle_deg);
@@ -291,12 +288,12 @@ function drawSticker(src) {
           context.translate(-x, -y);
           context.rotate(-angle);
         });
+      }
 
-        resolve(result);
-      };
+      resolve(result);
+    };
 
-      img.src = src;
-    }
+    img.src = src;
   });
 }
 
@@ -316,9 +313,11 @@ async function getResult() {
   } else {
     for (const key in currentResult) {
       const src = currentResult[key];
-      currentResult[key] = await drawSticker(src).toDataURL('image/png');
+      currentResult[key] = (await drawSticker(src)).toDataURL('image/png');
     }
   }
+
+  sendResult();
 }
 
 async function sendResult() {
