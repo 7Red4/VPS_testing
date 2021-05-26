@@ -419,7 +419,6 @@ function showResult() {
   $('.switch-frame').addClass('hide');
   show(STICKER_AREA);
   $('.sticker_control').show();
-  $('.sticker-controller-panel').show();
 }
 
 $('.frame-select').on('click', function (e) {

@@ -298,6 +298,7 @@ function drawSticker(src) {
 }
 
 async function getResult() {
+  show(document.getElementById('modal'));
   const isGIF = GIF_TEMP.length;
 
   if (isGIF) {
@@ -343,5 +344,7 @@ async function sendResult() {
 }
 
 function handleImageResponse(responses) {
-  show(document.getElementById('modal'));
+  show(document.querySelector('#modal'));
+  hide(document.querySelector('#modal-loading'));
+  show(document.querySelector('.modal-container'));
 }

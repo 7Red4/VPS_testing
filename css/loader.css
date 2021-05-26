@@ -1,4 +1,3 @@
-
 #MAIN_WRAP .loader {
   position: relative;
   margin: 0px auto;
@@ -6,12 +5,18 @@
 }
 
 #MAIN_WRAP .loader:before {
-  content: "";
+  content: '';
   display: block;
   padding-top: 100%;
 }
 
-#MAIN_WRAP .circular {
+#modal-loading {
+  position: relative;
+  width: 60px;
+  height: 60px;
+}
+
+.circular {
   -webkit-animation: rotate 2s linear infinite;
   animation: rotate 2s linear infinite;
   height: 100%;
@@ -27,7 +32,7 @@
   margin: auto;
 }
 
-#MAIN_WRAP .path {
+.path {
   stroke-dasharray: 1, 200;
   stroke-dashoffset: 0;
   -webkit-animation: dash 1.5s ease-in-out infinite;
