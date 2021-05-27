@@ -338,8 +338,12 @@ async function sendResult() {
       body: FD
     });
 
-    console.log(res);
     responses.push(res);
+    let result = await res.json();
+    console.log(result);
+    console.log(result.url);
+    $("#ar-fb a").attr("href", "https://www.facebook.com/sharer/sharer.php?u=" + result.url);
+
   }
   handleImageResponse(responses);
 }
@@ -351,6 +355,11 @@ function handleImageResponse(responses) {
   hide(document.querySelector('.sticker-controller-panel'));
   hide(document.querySelector('.sticker_control'));
   hide(document.querySelector('.switch-frame'));
+  hide(document.querySelector('.ar-result'));
+  hide(document.querySelector('.ar-next'));
+  show(document.querySelector('.ar-fb'));
+  show(document.querySelector('.ar-redirect'));
+  
   // redirect();
   // show(document.querySelector('.modal-container'));
 }

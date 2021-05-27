@@ -13,6 +13,29 @@ body {
   margin: 0;
 }
 
+a{
+  text-decoration: none;
+}
+
+a:link {
+  color: inherit;
+}
+
+/* visited link */
+a:visited {
+  color: inherit;
+}
+
+/* mouse over link */
+a:hover {
+  color: inherit;
+}
+
+/* selected link */
+a:active {
+  color: inherit;
+}
+
 .header {
   height: 60px;
   background-color: #df1c11;
@@ -130,9 +153,9 @@ body {
   padding: 10px 0;
 }
 
-.ar-control-ui div:hover {
+.ar-control-ui div:hover, .ar-control-ui a:hover {
   background-color: #d53228;
-  color: white;
+  color: white !important;
 }
 
 .btn {
@@ -177,6 +200,11 @@ body {
 .content {
   letter-spacing: 0.5px;
   line-height: 1.5;
+}
+
+#ar-result{
+  border-color: gray;
+  color: gray;
 }
 
 @media screen and (max-width: 700px) {
