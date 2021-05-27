@@ -338,13 +338,19 @@ async function sendResult() {
       body: FD
     });
 
+    console.log(res);
     responses.push(res);
   }
   handleImageResponse(responses);
 }
 
 function handleImageResponse(responses) {
-  show(document.querySelector('#modal'));
+  // console.log(responses);
+  hide(document.querySelector('#modal'));
   hide(document.querySelector('#modal-loading'));
-  show(document.querySelector('.modal-container'));
+  hide(document.querySelector('.sticker-controller-panel'));
+  hide(document.querySelector('.sticker_control'));
+  hide(document.querySelector('.switch-frame'));
+  // redirect();
+  // show(document.querySelector('.modal-container'));
 }
