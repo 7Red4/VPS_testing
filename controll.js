@@ -284,26 +284,15 @@ async function generateGIF() {
     setPercent(counter / 10);
     if (!Boolean(counter % 1000) && counter) {
       const sec = counter / 1000;
-      console.log(sec);
 
-      if (sec > 3) {
-        let dispaySec = 2;
-        sec === 4 && (dispaySec = 2);
-        sec === 5 && (dispaySec = 1);
-        sec === 6 && (dispaySec = 2);
-        sec === 7 && (dispaySec = 1);
-        sec === 8 && (dispaySec = '');
-        COUNTER_DIGIT.innerText = dispaySec;
-      } else {
-        COUNTER_DIGIT.innerText = 4 - sec;
-      }
+      COUNTER_DIGIT.innerText = 4 - sec;
     }
-    if (counter === 4000 || counter === 6000 || counter === 8000) {
+    if (counter === 2000 || counter === 3000 || counter === 4000) {
       console.log('GO');
       index++;
       add(counter);
     }
-    if (counter >= 8000) {
+    if (counter >= 4000) {
       end();
     }
     counter += tickerTime;

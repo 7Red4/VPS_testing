@@ -118,7 +118,7 @@ function modelLoder(threeStuffs) {
     ) {
       loader.load(
         // resource URL
-        `./assets/models/${modelName}.glb`,
+        `/Virtual-Photo-Booth/assets/models/${modelName}.glb`,
         // called when the resource is loaded
         function (model) {
           model.scene.scale.set(...models[modelName].scale);
@@ -191,7 +191,7 @@ function init_faceFilter(videoSettings) {
       videoElement
     },
     canvasId: 'jeeFaceFilterCanvas',
-    NNCPath: '/neuralNets/', // root of NN_DEFAULT.json file
+    NNCPath: '/Virtual-Photo-Booth/neuralNets/', // root of NN_DEFAULT.json file
     maxFacesDetected: 1,
     callbackReady: function (errCode, spec) {
       if (errCode) {
@@ -345,7 +345,7 @@ function getUrlVars() {
 }
 
 function redirect() {
-  window.location.href = `/congrat/${payload.token}/${payload.gameId}/${
+  window.location.href = `/vpb/congrat/${payload.token}/${payload.gameId}/${
     payload.recordId
   }/${Number(permission.value)}`;
 }
