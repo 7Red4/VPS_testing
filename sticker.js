@@ -366,6 +366,7 @@ function handleImageResponse(responses) {
   hide(document.querySelector('.ar-result'));
   hide(document.querySelector('.ar-next'));
   show(document.querySelector('.ar-fb'));
+  show(document.querySelector('.ar-tweet'));
   show(document.querySelector('.ar-redirect'));
 
   // redirect();
