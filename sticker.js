@@ -324,6 +324,8 @@ async function getResult() {
 async function sendResult() {
   const isGIF = GIF_TEMP.length;
   const responses = [];
+  const isNoUrls = !URL_FOR_SHOW || !URL_FOR_REAL;
+  if (isNoUrls) return;
 
   for (const key in currentResult) {
     const src = currentResult[key];
@@ -339,11 +341,17 @@ async function sendResult() {
     });
 
     responses.push(res);
-    let result = await res.json();
-    console.log(result);
-    console.log(result.url);
-    $("#ar-fb a").attr("href", "https://www.facebook.com/sharer/sharer.php?u=" + result.url);
-
+    if (key === 'forShow') {
+      let result = await res.json();
+      $('#ar-fb a').attr(
+        'href',
+        'https://www.facebook.com/sharer/sharer.php?u=' + result.url
+      );
+      $('#ar-tweet a').attr(
+        'href',
+        'https://twitter.com/intent/tweet?text=' + result.url
+      );
+    }
   }
   handleImageResponse(responses);
 }
@@ -359,7 +367,7 @@ function handleImageResponse(responses) {
   hide(document.querySelector('.ar-next'));
   show(document.querySelector('.ar-fb'));
   show(document.querySelector('.ar-redirect'));
-  
+
   // redirect();
   // show(document.querySelector('.modal-container'));
 }
