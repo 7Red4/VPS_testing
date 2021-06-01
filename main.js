@@ -1,10 +1,8 @@
 // "use strict";
 const MAIN_WRAP = document.getElementById('MAIN_WRAP');
-const URL_FOR_REAL =
-  'https://www.fun4lab.com/api/v1/virtual-photo-booth/upload/customer/product';
+const URL_FOR_REAL = '';
 
-const URL_FOR_SHOW =
-  'https://www.fun4lab.com/api/v1/virtual-photo-booth/upload/customer/only';
+const URL_FOR_SHOW = '';
 
 const BG_REMOVE_CANVAS = document.getElementById('bgRemove');
 const bgRemoveCanvasctx = BG_REMOVE_CANVAS.getContext('2d');
@@ -118,7 +116,7 @@ function modelLoder(threeStuffs) {
     ) {
       loader.load(
         // resource URL
-        `/Virtual-Photo-Booth/assets/models/${modelName}.glb`,
+        `/assets/models/${modelName}.glb`,
         // called when the resource is loaded
         function (model) {
           model.scene.scale.set(...models[modelName].scale);
@@ -191,7 +189,7 @@ function init_faceFilter(videoSettings) {
       videoElement
     },
     canvasId: 'jeeFaceFilterCanvas',
-    NNCPath: '/Virtual-Photo-Booth/neuralNets/', // root of NN_DEFAULT.json file
+    NNCPath: '/neuralNets/', // root of NN_DEFAULT.json file
     maxFacesDetected: 1,
     callbackReady: function (errCode, spec) {
       if (errCode) {

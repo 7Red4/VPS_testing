@@ -17,13 +17,11 @@
       crossorigin="anonymous"
     ></script>
 
-    <script src="/Virtual-Photo-Booth/s3/upload.bundle.js"></script>
-
-    <script src="/Virtual-Photo-Booth/jeelizFaceFilter/jeelizFaceFilter.js"></script>
-    <script src="/Virtual-Photo-Booth/libs/three/v112/three.min.js"></script>
-    <script src="/Virtual-Photo-Booth/libs/three/v112/GLTFLoader.js"></script>
-    <script src="/Virtual-Photo-Booth/helpers/JeelizResizer.js"></script>
-    <script src="/Virtual-Photo-Booth/helpers/JeelizThreeHelper.js"></script>
+    <script src="/jeelizFaceFilter/jeelizFaceFilter.js"></script>
+    <script src="/libs/three/v112/three.min.js"></script>
+    <script src="/libs/three/v112/GLTFLoader.js"></script>
+    <script src="/helpers/JeelizResizer.js"></script>
+    <script src="/helpers/JeelizThreeHelper.js"></script>
 
     <!-- <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.2"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/body-pix@2.0"></script> -->
@@ -32,9 +30,9 @@
       integrity="sha512-UXumZrZNiOwnTcZSHLOfcTs0aos2MzBWHXOHOuB0J/R44QB0dwY5JgfbvljXcklVf65Gc4El6RjZ+lnwd2az2g=="
       crossorigin="anonymous"
     ></script>
-    <link rel="stylesheet" href="/Virtual-Photo-Booth/css/index.css" />
-    <link rel="stylesheet" href="/Virtual-Photo-Booth/css/loader.css" />
-    <link rel="stylesheet" href="/Virtual-Photo-Booth/css/ui_controlls.css" />
+    <link rel="stylesheet" href="/css/index.css" />
+    <link rel="stylesheet" href="/css/loader.css" />
+    <link rel="stylesheet" href="/css/ui_controlls.css" />
     <!-- web ar script and style END -->
   </head>
   <body>
@@ -109,15 +107,15 @@
                 <span id="counter_digit"></span>
               </div>
               <div id="btn_shutter">
-                <img src="/Virtual-Photo-Booth/icons/gif.svg" style="width: 100%" />
+                <img src="/icons/gif.svg" style="width: 100%" />
               </div>
               <label id="switch_gif_wrapper" for="switch_gif">
                 <input type="checkbox" id="switch_gif" hidden />
-                <img src="/Virtual-Photo-Booth/icons/gif.svg" style="width: 100%" />
+                <img src="/icons/gif.svg" style="width: 100%" />
               </label>
               <div id="btn_close" class="hide"></div>
               <a id="btn_save" class="hide" target="_blank">
-                <img src="/Virtual-Photo-Booth/icons/save_alt.svg" style="width: 100%" />
+                <img src="/icons/save_alt.svg" style="width: 100%" />
               </a>
             </div>
             <div id="sticker_area" class="hide"></div>
@@ -132,7 +130,7 @@
           />
           Agree to share your photo with the gallery？
         </div>
-          
+
         <div class="sticker-controller-panel" style="display: none">
           <div class="delete_sticker_btn btn">Remove Sticker</div>
           <div class="sticker_control-value">
@@ -152,16 +150,16 @@
         </div>
 
         <div class="sticker_control" style="display: none">
-          <img src="/Virtual-Photo-Booth/assets//stickers/sticker-1.png" class="sticker" />
-          <img src="/Virtual-Photo-Booth/assets//stickers/sticker-2.png" class="sticker" />
-          <img src="/Virtual-Photo-Booth/assets//stickers/sticker-3.png" class="sticker" />
-          <img src="/Virtual-Photo-Booth/assets//stickers/sticker-4.png" class="sticker" />
-          <img src="/Virtual-Photo-Booth/assets//stickers/sticker-5.png" class="sticker" />
-          <img src="/Virtual-Photo-Booth/assets//stickers/sticker-6.png" class="sticker" />
-          <img src="/Virtual-Photo-Booth/assets//stickers/sticker-7.png" class="sticker" />
-          <img src="/Virtual-Photo-Booth/assets//stickers/sticker-8.png" class="sticker" />
-          <img src="/Virtual-Photo-Booth/assets//stickers/sticker-9.png" class="sticker" />
-          <img src="/Virtual-Photo-Booth/assets//stickers/sticker-10.png" class="sticker" />
+          <img src="/assets//stickers/sticker-1.png" class="sticker" />
+          <img src="/assets//stickers/sticker-2.png" class="sticker" />
+          <img src="/assets//stickers/sticker-3.png" class="sticker" />
+          <img src="/assets//stickers/sticker-4.png" class="sticker" />
+          <img src="/assets//stickers/sticker-5.png" class="sticker" />
+          <img src="/assets//stickers/sticker-6.png" class="sticker" />
+          <img src="/assets//stickers/sticker-7.png" class="sticker" />
+          <img src="/assets//stickers/sticker-8.png" class="sticker" />
+          <img src="/assets//stickers/sticker-9.png" class="sticker" />
+          <img src="/assets//stickers/sticker-10.png" class="sticker" />
         </div>
 
         <div class="switch-frame hide">
@@ -175,15 +173,20 @@
             Take photo
           </div>
           <div id="ar-gif" class="ar-gif" onclick="generateGIF()">Take GIF</div>
-          
+
           <div id="ar-result" class="ar-result" onclick="closeResult()">
             Cancel
           </div>
 
           <div id="ar-fb" class="ar-fb hide" onclick="">
-            <a href="https://www.facebook.com/sharer/sharer.php?u=#" target="_blank">Share to FB</a>
+            <a
+              href="https://www.facebook.com/sharer/sharer.php?u=#"
+              target="_blank"
+            >
+              Share to FB
+            </a>
           </div>
-          
+
           <div id="ar-next" class="ar-next" onclick="nextStep()">
             <span class="text">Finish</span>
           </div>
@@ -243,10 +246,10 @@
       </div>
     </div>
     <!-- web ar controll scripts START -->
-    <script src="/Virtual-Photo-Booth/libs/gifjs/dist/gif.js"></script>
-    <script src="/Virtual-Photo-Booth/main.js"></script>
-    <script src="/Virtual-Photo-Booth/controll.js"></script>
-    <script src="/Virtual-Photo-Booth/sticker.js"></script>
+    <script src="/libs/gifjs/dist/gif.js"></script>
+    <script src="/main.js"></script>
+    <script src="/controll.js"></script>
+    <script src="/sticker.js"></script>
     <!-- web ar controll scripts END -->
   </body>
 </html>
