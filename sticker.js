@@ -299,6 +299,22 @@ function drawSticker(src) {
 
 async function getResult() {
   show(document.getElementById('modal'));
+
+  const finishMask = document.createElement('div');
+  finishMask.id = 'FINISH_MASK';
+  const finishMaskStyle = {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    zIndex: 999
+  };
+  Object.keys(finishMaskStyle).forEach((prop) => {
+    finishMask.style[prop] = finishMaskStyle[prop];
+  });
+  document.getElementById('MAIN_WRAP').append(finishMask);
+
   const isGIF = GIF_TEMP.length;
 
   if (isGIF) {
