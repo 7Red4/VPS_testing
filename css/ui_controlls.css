@@ -150,36 +150,158 @@
   z-index: 3;
 }
 
-.switch-frame {
-  cursor: pointer;
+.switch-frame, #switch-stick, #switch-social, #switch-photo{
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
+  flex-direction: column;
   align-items: center;
   z-index: 10;
-  color: #d53228;
-  width: 100%;
-  margin-top: 12px;
-  padding: 0 6px;
-  width: 100%;
-  max-width: 360px;
+  color: #fff;
+  /* width: 400px; */
+  max-width: 500px;
+  height: 270px;
+  min-width: 320px;
+  border-radius: 15px;
+  background-color: #fff;
+  padding: 0 45px;
 }
-
-.switch-frame {
-  left: 0px;
+.switch-frame button, #switch-stick button, #switch-social button, #switch-photo button{
+  align-self: flex-end;
+  background-color: #d53228;
+  border-radius: 25px;
+  width: 170px;
+  height: 45px;
+  border: none;
+  font-size: 20px;
+  color: #fff;
+  cursor: pointer;
 }
-
-.switch-frame .frame-select {
-  border: 1px solid #d53228;
-  padding: 3px 5px;
-  width: 30%;
-  margin: 10px;
-  padding: 10px 25px;
+.switch-frame h4, #switch-stick h4, #switch-social h4, #switch-photo h4{
+  color: #000;
+  font-size: 20px;
+  align-self: flex-start;
+  font-weight: bold;
+}
+.switch-frame .select-box{
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+.switch-frame .select-box .frame-select{
+  width: 60px;
+  height: 60px;
+  font-size: 28px;
+  font-weight: bold;
+  line-height: 60px;
   text-align: center;
+  border-radius: 10px;
+  cursor: pointer;
 }
-
-.switch-frame .frame-select.active {
+.switch-frame .select-box .frame-select:nth-child(1){
+  background-color: #9e3742;
+  opacity: .5;
+}
+.switch-frame .select-box .frame-select:nth-child(2){
+  background-color: #9e3742;
+  opacity: .5;
+}
+.switch-frame .select-box .frame-select:nth-child(3){
+  background-color: #9e3742;
+  opacity: .5;
+}
+.switch-frame .select-box .frame-select:nth-child(4){
+  background-color: #28abda;
+  opacity: .5;
+}
+.switch-frame .select-box .frame-select:nth-child(5){
+  background-color: #dd773e;
+  opacity: .5;
+}
+.switch-frame .select-box .frame-select:nth-child(6){
+  background-color: #c736ae;
+  opacity: .5;
+}
+#switch-photo .photo-box{
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+#switch-photo .photo-box img{
+  width: 198px;
+  cursor: pointer;
+}
+#switch-stick{
+  width: auto;
+  height: auto;
+  gap: 15px;
+  padding: 15px 15px;
+}
+#switch-social{
+  width: 510px;
+  height: auto;
+  justify-content: center;
+  gap: 20px;
+  padding-bottom: 30px;
+}
+#switch-social h4{
+  font-size: 16px;
+  line-height: 150%;
+}
+#switch-social span{
+  color: #000;
+  align-self: flex-start;
+}
+#switch-social .btn-block{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+#switch-social .img-box{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 100px;
+  cursor: pointer;
+}
+#switch-social .img-box div{
+  position: relative;
+  /* width: 150px; */
+  height: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  gap: 10px;
+}
+#switch-social .img-box div span{
+  align-self: center;
+}
+#switch-social .img-box .check{
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+#switch-social .btn-block button{
+  width: 130px;
+  height: 40px;
+  font-size: 14px;
+}
+#switch-social .btn-block a{
+  width: 130px;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  font-size: 14px;
   color: #fff;
   background-color: #d53228;
+  border-radius: 25px;
+}
+
+.switch-frame .select-box .frame-select + .active{
+  transition: .5s;
+  opacity: 1;
 }
 
 #MAIN_WRAP .delete_sticker_btn {
@@ -251,3 +373,132 @@
   margin-top: 10px;
 }
 
+@media screen and (max-width: 480px) {
+  .switch-frame{
+    transition: .3s;
+    position: absolute;
+    width: 100%;
+    background-color: #fff;
+    left: 50%;
+    bottom: 0;
+    font-size: 14px;
+    line-height: 200%;
+    letter-spacing: 4.5%;
+    z-index: 500;
+    transform: translate(-50%,0);
+    border-radius: 0;
+    flex-direction: column;
+    gap: 12.5px;
+    padding: 0 10px;
+    height: auto;
+    margin-bottom: 15px;
+  }
+  .switch-frame .select-box {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    gap: 2.5px;
+  }
+  .switch-frame .select-box .frame-select{
+    width: 14vw;
+    height: 14vw;
+    line-height: 14vw;
+  }
+  .switch-frame h4{
+    align-self: left;
+    margin: 0;
+  }
+  #switch-photo{
+    transition: .3s;
+    position: absolute;
+    width: 100%;
+    background-color: #fff;
+    left: 50%;
+    bottom: 0;
+    font-size: 14px;
+    line-height: 200%;
+    letter-spacing: 4.5%;
+    z-index: 500;
+    transform: translate(-50%,0);
+    border-radius: 0;
+    flex-direction: column;
+    padding: 15px 15px;
+    height: auto;
+  }
+  #switch-photo .photo-box img {
+    width: 40%;
+  }
+  #switch-stick{
+    transition: .3s;
+    position: absolute;
+    width: 100%;
+    background-color: #fff;
+    left: 50%;
+    bottom: 0;
+    font-size: 14px;
+    line-height: 200%;
+    letter-spacing: 4.5%;
+    z-index: 500;
+    transform: translate(-50%,0);
+    border-radius: 0;
+    flex-direction: column;
+    height: auto;
+    padding: 10px 15px;
+  }
+  #switch-stick .sticker_control{
+    border-radius: 15px;
+  }
+  #switch-stick h4{
+    margin: 0;
+  }
+  #switch-social{
+    transition: .3s;
+    position: absolute;
+    width: 100%;
+    background-color: #fff;
+    left: 50%;
+    bottom: 0;
+    font-size: 14px;
+    letter-spacing: 4.5%;
+    z-index: 500;
+    transform: translate(-50%,0);
+    border-radius: 0;
+    flex-direction: column;
+    height: auto;
+    padding: 10px 15px;
+    z-index: 901;
+  }
+  #switch-social .img-box{
+    gap: 20px;
+  }
+  #switch-social .btn-block{
+    width: 100%;
+  }
+  #switch-social .btn-block button, #switch-social .btn-block a{
+    width: 30%;
+    font-size: 12px;
+  }
+  .hide-panel{
+    display: block !important;
+    cursor: pointer;
+    align-self: flex-start;
+    margin: 15px 0;
+  }
+  .hid-frame{
+    transform: translate(-50%,180px) !important;
+    transition: .3s;
+  }
+  .hid-photo{
+    transform: translate(-50%,100px) !important;
+    transition: .3s;
+  }
+  .hid-stick{
+    transform: translate(-50%,82.5%) !important;
+    transition: .3s;
+  }
+  .hid-social{
+    transform: translate(-50%,585px) !important;
+    transition: .3s;
+  }
+}

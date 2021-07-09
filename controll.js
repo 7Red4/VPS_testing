@@ -55,9 +55,11 @@ const currentFrame = {
       });
 
       if (FRAME_COMBINATION[v - 1]) {
-        $('.frame-select').removeClass('active');
+        $('.frame-select').removeClass('active').css('opacity', '0.5');
         $(`.frame-select[target=${v}]`).addClass('active');
-        if ([1, 2, 3].includes(v)) {
+        $(`.frame-select[target=${v}]`).css('opacity', '1.0');
+        if ([1, 2, 3, 4, 5, 6].includes(v)) {
+          console.log('Includes , ', v);
           FRONT_FRAME.src = `assets/Ver${v}Q.png`;
           F_IMAGE.src = `assets/Ver${v}Q.png`;
           F_IMAGE_REAL.src = `assets/Ver${v}.png`;
@@ -73,9 +75,12 @@ const currentFrame = {
 };
 
 const FRAME_COMBINATION = [
-  { models: ['Goggle', 'Text3D', 'Coat'] },
-  { models: ['Mask'] },
-  { models: ['Goggle', 'Nerdy', 'Coat'] }
+  { models: ['Goggle_Red', 'Text3D', 'Coat'] },
+  { models: ['Goggle_Red', 'Mask'] },
+  { models: ['Goggle_Red'] },
+  { models: ['Goggle_Blue','Text3D_Blue']},
+  { models: ['Goggle_Orange','Text3D_Orange'] },
+  { models: ['Goggle_Purple','Text3D_Purple']} 
 ];
 
 function GO_LOADING() {
@@ -144,7 +149,7 @@ function showTools() {
 
 function hideTools() {
   hide(CLOSE);
-  hide(SAVE);
+  // hide(SAVE);
 }
 
 function showShutterControlls() {
@@ -248,14 +253,16 @@ async function generatePicture() {
   SAVE.href = IMAGE_URL;
 
   NO_LOADING();
-  // showTools();
   showResult();
+  document.getElementById('switch-stick').classList.remove('hide');
+  show(document.querySelector('.sticker_control'));
 }
 
 async function generateGIF() {
   IMAGE_URL = '';
   currentResult = {};
   hideShutterControlls(SHUTTER);
+  document.getElementById('gif-countdown').classList.remove('hide');
 
   clearInterval(GIF_timer);
   GIF_timer = null;
@@ -270,22 +277,26 @@ async function generateGIF() {
     clearInterval(GIF_timer);
     GIF_timer = null;
     counter = 0;
-    hide(document.getElementById('percentage'));
+    // hide(document.getElementById('percentage'));
+    document.getElementById('switch-stick').classList.remove('hide');
+    document.getElementById('gif-countdown').classList.add('hide');
+    console.log('gif end');
   }
 
   function add() {
     getPictureURL({ toGIF: true, index });
   }
 
-  show(document.getElementById('percentage'));
+  // show(document.getElementById('percentage'));
 
   const tickerTime = 10;
   GIF_timer = setInterval(() => {
     setPercent(counter / 10);
     if (!Boolean(counter % 1000) && counter) {
       const sec = counter / 1000;
-
-      COUNTER_DIGIT.innerText = 4 - sec;
+      document.getElementById('circle-counter').innerText = 4 - sec;
+      document.getElementById('gif-mask').style.opacity = 0;
+      setTimeout(()=>{document.getElementById('gif-mask').style.opacity = 1;}, 500)
     }
     if (counter === 2000 || counter === 3000 || counter === 4000) {
       console.log('GO');
@@ -323,6 +334,7 @@ function render_GIF() {
     NO_LOADING();
     // showTools();
     showResult();
+    SAVE.href = IMAGE_URL;
   });
 
   gif_for_real.on('finished', function (blob) {
@@ -389,15 +401,18 @@ function closeResult() {
   hideTools();
   showShutterControlls();
   hide(RENDER_PICTURE);
-  $('.ar-photo').show();
-  $('.ar-gif').show();
+  // $('.ar-photo').show();
+  // $('.ar-gif').show();
   $('.ar-next').hide();
   $('.ar-result').hide();
   $('.switch-frame').removeClass('hide');
-  $('.sticker_control').hide();
-  $('.sticker-controller-panel').hide();
+  // $('.sticker_control').hide();
+  // $('.sticker-controller-panel').hide();
+  $('#switch-social').hide();
   cleanUpStickerArea();
   hide(STICKER_AREA);
+  document.getElementById('gif-mask').style.opacity = 0;
+  $('#FINISH_MASK').remove();
 }
 
 function showResult() {

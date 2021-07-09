@@ -406,7 +406,7 @@ function closeResult() {
   $('.ar-result').hide();
   $('.switch-frame').removeClass('hide');
   $('.sticker_control').hide();
-  $('.sticker-controller-panel').hide();
+  // $('.sticker-controller-panel').hide();
   cleanUpStickerArea();
   hide(STICKER_AREA);
 }

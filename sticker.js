@@ -26,6 +26,7 @@ $('.sticker').on('click', (e) => {
   $('#StickerRotateValue')[0].value = 0;
   $('#StickerScaleValue')[0].value = 10;
   $('.sticker-controller-panel').show();
+  show(document.querySelector('.sticker-controller-panel'));
   $('.delete_sticker_btn').show();
 
   STICKER_AREA.appendChild(newSticker);
@@ -39,6 +40,7 @@ $('.sticker').on('click', (e) => {
     $('#StickerScaleValue')[0].value =
       (newSticker.width / newSticker.originWidth).toFixed(1) * 10;
     $('.sticker-controller-panel').show();
+    show(document.querySelector('.sticker-controller-panel'));
     $('.delete_sticker_btn').show();
     currentMovingSticker = newSticker;
   });
@@ -308,7 +310,7 @@ async function getResult() {
     left: 0,
     width: '100%',
     height: '100%',
-    zIndex: 999
+    zIndex: 900
   };
   Object.keys(finishMaskStyle).forEach((prop) => {
     finishMask.style[prop] = finishMaskStyle[prop];
@@ -331,9 +333,9 @@ async function getResult() {
     for (const key in currentResult) {
       const src = currentResult[key];
       currentResult[key] = (await drawSticker(src)).toDataURL('image/png');
+      SAVE.href = currentResult.forShow;
     }
   }
-
   sendResult();
 }
 
@@ -356,6 +358,7 @@ async function sendResult() {
       body: FD
     });
 
+
     responses.push(res);
     if (key === 'forShow') {
       let result = await res.json();
@@ -367,6 +370,9 @@ async function sendResult() {
         'href',
         'https://twitter.com/intent/tweet?text=' + result.url
       );
+      //addon
+      sharedUrl.fb = result.url;
+      sharedUrl.tw = result.url;
     }
   }
   handleImageResponse(responses);

@@ -46,6 +46,15 @@ let STREAM = null;
 
 let THREECAMERA = null;
 
+let lastCheckId = 0;
+
+let sharedUrl = {
+  fb: '',
+  tw: ''
+};
+
+let hideToggle = [false, false, false, false];
+
 function hide(el) {
   el.classList.add('hide');
 }
@@ -108,7 +117,39 @@ function modelLoder(threeStuffs) {
     Text3D: {
       scale: [5, 5, 5],
       position: [0, 0.8, 0]
-    }
+    },
+    Text3D_Orange: {
+      scale: [5, 5, 5],
+      position: [0, 0.8, 0]
+    },
+    Text3D_Blue: {
+      scale: [5, 5, 5],
+      position: [0, 0.8, 0]
+    },
+    Text3D_Purple: {
+      scale: [5, 5, 5],
+      position: [0, 0.8, 0]
+    },
+    Goggle: {
+      scale: [9, 9, 9],
+      position: [0, 0.3, 0.5]
+    },
+    Goggle_Blue: {
+      scale: [9, 9, 9],
+      position: [0, 0.3, 0.5]
+    },
+    Goggle_Orange: {
+      scale: [9, 9, 9],
+      position: [0, 0.3, 0.5]
+    },
+    Goggle_Purple: {
+      scale: [9, 9, 9],
+      position: [0, 0.3, 0.5]
+    },
+    Goggle_Red: {
+      scale: [9, 9, 9],
+      position: [0, 0.3, 0.5]
+    },
   };
 
   Object.keys(models).forEach((modelName, idx, keys) => {
@@ -118,7 +159,7 @@ function modelLoder(threeStuffs) {
     ) {
       loader.load(
         // resource URL
-        `/Virtual-Photo-Booth/assets/models/${modelName}.glb`,
+        `assets/models/${modelName}.glb`,
         // called when the resource is loaded
         function (model) {
           model.scene.scale.set(...models[modelName].scale);
@@ -191,7 +232,7 @@ function init_faceFilter(videoSettings) {
       videoElement
     },
     canvasId: 'jeeFaceFilterCanvas',
-    NNCPath: '/Virtual-Photo-Booth/neuralNets/', // root of NN_DEFAULT.json file
+    NNCPath: 'neuralNets/', // root of NN_DEFAULT.json file
     maxFacesDetected: 1,
     callbackReady: function (errCode, spec) {
       if (errCode) {
@@ -219,7 +260,7 @@ function init_faceFilter(videoSettings) {
 
 function startVideoStream() {
   show(document.getElementById('loading'));
-  hide(document.getElementById('load_btn'));
+  hide(document.getElementsByClassName('filter-intro')[0]);
   navigator.mediaDevices
     .getUserMedia({
       video: true,
@@ -254,6 +295,21 @@ function loadBodyPix(e, stream = STREAM) {
   } else {
     main();
   }
+}
+
+function takePhotoOrGif() {
+  document.getElementById('switch-frame').classList.add('hide');
+  document.getElementById('switch-photo').classList.remove("hide");
+  document.querySelector('.sticker_control').classList.remove('hide');
+}
+function afterTakingPhoto() {
+  document.getElementById('switch-stick').classList.add('hide');
+  document.getElementById('switch-social').classList.remove("hide");
+  document.getElementById('switch-social').style.display = 'flex';
+  document.querySelector('.sticker_control').style.display = 'flex';
+  document.querySelector('.sticker-controller-panel').style.display = 'flex';
+  getResult();
+  console.log('after 貼紙');
 }
 
 async function perform() {
@@ -324,10 +380,18 @@ $(document).ready(function () {
   if (!payload.token) {
     window.location.href = 'https://www.fun4lab.com';
   }
+  setBreadImage(2);
 });
 
 function nextStep() {
   getResult();
+}
+
+function setBreadImage(id) {
+  const ids = ['bread-1', 'bread-2', 'bread-3', 'bread-4'];
+  for (let i = 1; i <= ids.length; i++){
+    document.getElementById(ids[i-1]).src = (i===id) ? '/assets/active-b'+i+'.png':'/assets/b'+i+'.png';
+  }
 }
 
 function getUrlVars() {
@@ -345,7 +409,110 @@ function getUrlVars() {
 }
 
 function redirect() {
+  // window.location.href = `/vpb/congrat/${payload.token}/${payload.gameId}/${
+  //   payload.recordId
+  // }/${Number(permission.value)}`;
   window.location.href = `/vpb/congrat/${payload.token}/${payload.gameId}/${
     payload.recordId
-  }/${Number(permission.value)}`;
+  }/${((document.getElementsByClassName('checkGallery')[0].checked)?1:0)}`;
+}
+function activeCheckedIcon(id) {
+  lastCheckId = id;
+  // document.getElementById('checked-social').style.visibility = (id===1)?'visible':'hidden';
+  // document.getElementById('checked-gallery').style.visibility = (id === 2) ? 'visible' : 'hidden';
+  document.getElementById('checked-fb').style.visibility = (id === 3) ? 'visible' : 'hidden';
+  document.getElementById('checked-tw').style.visibility = (id === 4) ? 'visible' : 'hidden';
+  document.getElementById('fb-icon').style.opacity = (id === 3) ? 1 : 0.5;
+  document.getElementById('tw-icon').style.opacity = (id === 4) ? 1 : 0.5;
+  if (id === 1) {
+    document.getElementById('diaglog-s').classList.remove('hide');
+    document.getElementById('mask').classList.remove('hide');
+  }
+  if (id === 2) {
+    document.getElementById('diaglog-g').classList.remove('hide');
+    document.getElementById('mask').classList.remove('hide');
+  }
+}
+function closeDialog() {
+  lastCheckId = 0;
+  document.getElementById('diaglog-s').classList.add('hide');
+  document.getElementById('diaglog-g').classList.add('hide');
+  document.getElementById('mask').classList.add('hide');
+
+  // document.getElementById('checked-social').style.visibility = (document.getElementsByClassName('checkSocial')[0].checked) ? 'visible' : 'hidden';
+  document.getElementById('checked-gallery').style.visibility = (document.getElementsByClassName('checkGallery')[0].checked) ? 'visible' : 'hidden';
+}
+function ShareToFbOrTwitter(id) {
+  if (!document.getElementsByClassName('checkSocial')[0].checked) return;
+  if (lastCheckId === 3 || id === 3) {
+    window.open('https://www.facebook.com/sharer/sharer.php?u='+sharedUrl.fb);
+    closeDialog();
+  }
+  if (lastCheckId === 4 || id === 4){
+    window.open('https://twitter.com/intent/tweet?text='+sharedUrl.tw);
+    closeDialog();
+  }
+}
+function ShareToGallery() {
+  if (!document.getElementsByClassName('checkGallery')[0].checked) return;
+  //need an api
+  closeDialog();
+}
+function closeSwitchPhoto() {
+  document.getElementById('switch-photo').classList.add('hide');
+}
+function viewTerms() {
+  window.open('https://www.fun4lab.com/terms/conditions/11');
+}
+function checkShareToGallery() {
+  document.getElementById('dialog-gallery-ok').style.opacity = (document.getElementsByClassName('checkGallery')[0].checked) ? 1 : 0.5;
+  document.getElementById('dialog-social-ok').style.opacity = (document.getElementsByClassName('checkSocial')[0].checked) ? 1 : 0.5;
+}
+function togglePanel(id) {
+  switch (id) {
+    case 1:
+      if (hideToggle[0]) {
+        document.getElementById('switch-frame').classList.add('hid-frame');
+        document.getElementsByClassName('hide-panel')[0].src = '/assets/show-panel.svg';
+      }
+      else {
+        document.getElementById('switch-frame').classList.remove('hid-frame');
+        document.getElementsByClassName('hide-panel')[0].src = '/assets/hide-panel.svg';
+      }
+      hideToggle[0] = !hideToggle[0];
+      break;
+    case 2:
+      if (hideToggle[1]) {
+        document.getElementById('switch-photo').classList.add('hid-photo');
+        document.getElementsByClassName('hide-panel')[1].src = '/assets/show-panel.svg';
+      }
+      else {
+        document.getElementById('switch-photo').classList.remove('hid-photo');
+        document.getElementsByClassName('hide-panel')[1].src = '/assets/hide-panel.svg';
+      }
+      hideToggle[1] = !hideToggle[1];
+      break;
+    case 3:
+      if (hideToggle[2]) {
+        document.getElementById('switch-stick').classList.add('hid-stick');
+        document.getElementsByClassName('hide-panel')[2].src = '/assets/show-panel.svg';
+      }
+      else {
+        document.getElementById('switch-stick').classList.remove('hid-stick');
+        document.getElementsByClassName('hide-panel')[2].src = '/assets/hide-panel.svg';
+      }
+      hideToggle[2] = !hideToggle[2];
+      break;
+    case 4:
+      if (hideToggle[3]) {
+        document.getElementById('switch-social').classList.add('hid-social');
+        document.getElementsByClassName('hide-panel')[3].src = '/assets/show-panel.svg';
+      }
+      else {
+        document.getElementById('switch-social').classList.remove('hid-social');
+        document.getElementsByClassName('hide-panel')[3].src = '/assets/hide-panel.svg';
+      }
+      hideToggle[3] = !hideToggle[3];
+      break;
+  }
 }
