@@ -390,7 +390,7 @@ function nextStep() {
 function setBreadImage(id) {
   const ids = ['bread-1', 'bread-2', 'bread-3', 'bread-4'];
   for (let i = 1; i <= ids.length; i++){
-    document.getElementById(ids[i-1]).src = (i===id) ? '/assets/active-b'+i+'.png':'/assets/b'+i+'.png';
+    document.getElementById(ids[i-1]).src = (i===id) ? 'assets/active-b'+i+'.png':'assets/b'+i+'.png';
   }
 }
 
@@ -473,44 +473,44 @@ function togglePanel(id) {
     case 1:
       if (hideToggle[0]) {
         document.getElementById('switch-frame').classList.add('hid-frame');
-        document.getElementsByClassName('hide-panel')[0].src = '/assets/show-panel.svg';
+        document.getElementsByClassName('hide-panel')[0].src = 'assets/show-panel.svg';
       }
       else {
         document.getElementById('switch-frame').classList.remove('hid-frame');
-        document.getElementsByClassName('hide-panel')[0].src = '/assets/hide-panel.svg';
+        document.getElementsByClassName('hide-panel')[0].src = 'assets/hide-panel.svg';
       }
       hideToggle[0] = !hideToggle[0];
       break;
     case 2:
       if (hideToggle[1]) {
         document.getElementById('switch-photo').classList.add('hid-photo');
-        document.getElementsByClassName('hide-panel')[1].src = '/assets/show-panel.svg';
+        document.getElementsByClassName('hide-panel')[1].src = 'assets/show-panel.svg';
       }
       else {
         document.getElementById('switch-photo').classList.remove('hid-photo');
-        document.getElementsByClassName('hide-panel')[1].src = '/assets/hide-panel.svg';
+        document.getElementsByClassName('hide-panel')[1].src = 'assets/hide-panel.svg';
       }
       hideToggle[1] = !hideToggle[1];
       break;
     case 3:
       if (hideToggle[2]) {
         document.getElementById('switch-stick').classList.add('hid-stick');
-        document.getElementsByClassName('hide-panel')[2].src = '/assets/show-panel.svg';
+        document.getElementsByClassName('hide-panel')[2].src = 'assets/show-panel.svg';
       }
       else {
         document.getElementById('switch-stick').classList.remove('hid-stick');
-        document.getElementsByClassName('hide-panel')[2].src = '/assets/hide-panel.svg';
+        document.getElementsByClassName('hide-panel')[2].src = 'assets/hide-panel.svg';
       }
       hideToggle[2] = !hideToggle[2];
       break;
     case 4:
       if (hideToggle[3]) {
         document.getElementById('switch-social').classList.add('hid-social');
-        document.getElementsByClassName('hide-panel')[3].src = '/assets/show-panel.svg';
+        document.getElementsByClassName('hide-panel')[3].src = 'assets/show-panel.svg';
       }
       else {
         document.getElementById('switch-social').classList.remove('hid-social');
-        document.getElementsByClassName('hide-panel')[3].src = '/assets/hide-panel.svg';
+        document.getElementsByClassName('hide-panel')[3].src = 'assets/hide-panel.svg';
       }
       hideToggle[3] = !hideToggle[3];
       break;

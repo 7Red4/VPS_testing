@@ -8,7 +8,7 @@
       content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1"
     />
     <title>AR Filter</title>
-    <link rel="stylesheet" href="./ar-page2.css" />
+    <link rel="stylesheet" href="ar-page2.css" />
 
     <!-- web ar script and style START -->
     <script
@@ -21,13 +21,13 @@
       integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
       crossorigin="anonymous"></script>
 
-    <script src="/s3/upload.bundle.js"></script>
+    <script src="s3/upload.bundle.js"></script>
 
-    <script src="/jeelizFaceFilter/jeelizFaceFilter.js"></script>
-    <script src="/libs/three/v112/three.min.js"></script>
-    <script src="/libs/three/v112/GLTFLoader.js"></script>
-    <script src="/helpers/JeelizResizer.js"></script>
-    <script src="/helpers/JeelizThreeHelper.js"></script>
+    <script src="jeelizFaceFilter/jeelizFaceFilter.js"></script>
+    <script src="libs/three/v112/three.min.js"></script>
+    <script src="libs/three/v112/GLTFLoader.js"></script>
+    <script src="helpers/JeelizResizer.js"></script>
+    <script src="helpers/JeelizThreeHelper.js"></script>
 
     <!-- <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.2"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/body-pix@2.0"></script> -->
@@ -36,9 +36,9 @@
       integrity="sha512-UXumZrZNiOwnTcZSHLOfcTs0aos2MzBWHXOHOuB0J/R44QB0dwY5JgfbvljXcklVf65Gc4El6RjZ+lnwd2az2g=="
       crossorigin="anonymous"
     ></script>
-    <link rel="stylesheet" href="/css/index.css" />
-    <link rel="stylesheet" href="/css/loader.css" />
-    <link rel="stylesheet" href="/css/ui_controlls.css" />
+    <link rel="stylesheet" href="css/index.css" />
+    <link rel="stylesheet" href="css/loader.css" />
+    <link rel="stylesheet" href="css/ui_controlls.css" />
     <!-- web ar script and style END -->
   </head>
   <body>
@@ -47,7 +47,7 @@
       <div class="nbt">Nbt Studio</div>
     </div> -->
     <div class="header">
-      <img src="/assets/header-logo.svg" alt="" style="margin-left: 20px;">
+      <img src="assets/header-logo.svg" alt="" style="margin-left: 20px;">
       <span style="margin-right: 20px;color: #fff;cursor: pointer;font-size: 24px;">Contact</span>
     </div>
     <div class="container">
@@ -55,13 +55,13 @@
         <div id="mask" class="hide" onclick="closeDialog()"></div>
 
         <div class="pop-up-scocial hide" id='diaglog-s'>
-          <img class='close' src="/assets/close.svg" onclick="closeDialog()">
+          <img class='close' src="assets/close.svg" onclick="closeDialog()">
           <h4>Click to share to social media</h4>
           <div class="icon-box">
-            <img id='fb-icon' style='opacity: .5;' onclick="activeCheckedIcon(3);" src="/assets/fb.svg" alt="">
-            <img style='visibility: hidden;' class='check' id='checked-fb' src="/assets/v.svg" alt="">
-            <img id='tw-icon' style='opacity: .5;' onclick="activeCheckedIcon(4);" src="/assets/twitter.svg" alt="">
-            <img style='visibility: hidden;' class='check' id='checked-tw' src="/assets/v.svg" alt="">
+            <img id='fb-icon' style='opacity: .5;' onclick="activeCheckedIcon(3);" src="assets/fb.svg" alt="">
+            <img style='visibility: hidden;' class='check' id='checked-fb' src="assets/v.svg" alt="">
+            <img id='tw-icon' style='opacity: .5;' onclick="activeCheckedIcon(4);" src="assets/twitter.svg" alt="">
+            <img style='visibility: hidden;' class='check' id='checked-tw' src="assets/v.svg" alt="">
             <!-- <img style='visibility: hidden;' class='check' id='checked-social' src="/assets/v.svg" alt=""> -->
           </div>
           <div class="checkbox-container">
@@ -73,7 +73,7 @@
         </div>
 
         <div class="pop-up-gallery hide" id='diaglog-g'>
-          <img class='close' src="/assets/close.svg" onclick="closeDialog()">
+          <img class='close' src="assets/close.svg" onclick="closeDialog()">
           <h4>Share to gallery</h4>
           <div class="checkbox-container">
             <input class='checkGallery' type="checkbox" name="" id="checkboxInputOverride" value="1" onchange="checkShareToGallery();">
@@ -84,12 +84,12 @@
         </div>
 
 
-      <img src="/assets//banner.png" class='banner' alt="">
+      <img src="assets//banner.png" class='banner' alt="">
       <div class="breadcrumb">
-        <img id='bread-1' src="/assets/b1.png" alt="">
-        <img id='bread-2' src="/assets/b2.png" alt="">
-        <img id='bread-3' src="/assets/b3.png" alt="">
-        <img id='bread-4' src="/assets/b4.png" alt="">
+        <img id='bread-1' src="assets/b1.png" alt="">
+        <img id='bread-2' src="assets/b2.png" alt="">
+        <img id='bread-3' src="assets/b3.png" alt="">
+        <img id='bread-4' src="assets/b4.png" alt="">
       </div>
       <div class="left">
         <div class="ar-filter">
@@ -158,15 +158,15 @@
                 <span id="counter_digit"></span>
               </div>
               <div id="btn_shutter">
-                <img src="/icons/gif.svg" style="width: 100%" />
+                <img src="icons/gif.svg" style="width: 100%" />
               </div>
               <label id="switch_gif_wrapper" for="switch_gif">
                 <input type="checkbox" id="switch_gif" hidden />
-                <img src="/icons/gif.svg" style="width: 100%" />
+                <img src="icons/gif.svg" style="width: 100%" />
               </label>
               <div id="btn_close" class="hide"></div>
               <a id="btn_save_old" class="hide" target="_blank">
-                <img src="/icons/save_alt.svg" style="width: 100%" />
+                <img src="icons/save_alt.svg" style="width: 100%" />
               </a>
             </div>
             <div id="sticker_area" class="hide"></div>
@@ -191,7 +191,7 @@
             <img src="/assets/down.svg" alt="">
             <h4>Hide Panel</h4>
           </div> -->
-          <img class='hide-panel' style='display: none' src="/assets/hide-panel.svg" alt="" onclick="togglePanel(1)">
+          <img class='hide-panel' style='display: none' src="assets/hide-panel.svg" alt="" onclick="togglePanel(1)">
           <h4 class="frame-hide">Choose the frame style</h4>
           <div class='select-box frame-hide'>
             <div class="frame-select" target="1">A</div>
@@ -206,17 +206,17 @@
         <div></div>
 
         <div class="hide" id='switch-photo'>
-          <img class='hide-panel' style='display: none' src="/assets/hide-panel.svg" alt="" onclick="togglePanel(2)">
+          <img class='hide-panel' style='display: none' src="assets/hide-panel.svg" alt="" onclick="togglePanel(2)">
           <div class='photo-box'>
-            <img onclick='generatePicture();closeSwitchPhoto();' src="/assets/photo.png" alt="">
-            <img onclick='generateGIF();closeSwitchPhoto();' src="/assets/gif.png" alt="">
+            <img onclick='generatePicture();closeSwitchPhoto();' src="assets/photo.png" alt="">
+            <img onclick='generateGIF();closeSwitchPhoto();' src="assets/gif.png" alt="">
           </div>
           <!-- <button onclick="">Next</button> -->
         </div>
         <div></div>
 
         <div class="hide" id='switch-stick'>
-          <img class='hide-panel' style='display: none' src="/assets/hide-panel.svg" alt="" onclick="togglePanel(3)">
+          <img class='hide-panel' style='display: none' src="assets/hide-panel.svg" alt="" onclick="togglePanel(3)">
           <h4>Choose stickers</h4>
           <div class="sticker-controller-panel" style="display: none;">
             <div class="sticker_control-value">
@@ -236,22 +236,22 @@
             <div class="delete_sticker_btn btn">Remove</div>
           </div>
           <div class="sticker_control" style="display: none">
-            <img src="/assets//stickers/sticker-1.png" class="sticker" />
-            <img src="/assets//stickers/sticker-2.png" class="sticker" />
-            <img src="/assets//stickers/sticker-3.png" class="sticker" />
-            <img src="/assets//stickers/sticker-4.png" class="sticker" />
-            <img src="/assets//stickers/sticker-5.png" class="sticker" />
-            <img src="/assets//stickers/sticker-6.png" class="sticker" />
-            <img src="/assets//stickers/sticker-7.png" class="sticker" />
-            <img src="/assets//stickers/sticker-8.png" class="sticker" />
-            <img src="/assets//stickers/sticker-9.png" class="sticker" />
-            <img src="/assets//stickers/sticker-10.png" class="sticker" />
+            <img src="assets/stickers/sticker-1.png" class="sticker" />
+            <img src="assets/stickers/sticker-2.png" class="sticker" />
+            <img src="assets/stickers/sticker-3.png" class="sticker" />
+            <img src="assets/stickers/sticker-4.png" class="sticker" />
+            <img src="assets/stickers/sticker-5.png" class="sticker" />
+            <img src="assets/stickers/sticker-6.png" class="sticker" />
+            <img src="assets/stickers/sticker-7.png" class="sticker" />
+            <img src="assets/stickers/sticker-8.png" class="sticker" />
+            <img src="assets/stickers/sticker-9.png" class="sticker" />
+            <img src="assets/stickers/sticker-10.png" class="sticker" />
           </div>
           <button onclick="afterTakingPhoto();setBreadImage(3)">Next</button>
         </div>
 
         <div class="hide" id='switch-social'>
-          <img class='hide-panel' style='display: none' src="/assets/hide-panel.svg" alt="" onclick="togglePanel(4)">
+          <img class='hide-panel' style='display: none' src="assets/hide-panel.svg" alt="" onclick="togglePanel(4)">
           <h4>Don’t forget to share your photo on social media and tag us to receive an exclusive gift! You are very welcome to try this activity multiple times before our official launch. Please make sure you click the below button to redeem your gift. We will see you soon for the revealing.</h4>
           <span>Three gifts:</span>
           <span>1. Participant gift - nanobrick</span>
@@ -259,14 +259,14 @@
           <span>3. Correct answer gift – customized notebook/camera</span>
           <div class="img-box">
             <div onclick="activeCheckedIcon(1)">
-              <img src="/assets/s-social.svg" alt="">
+              <img src="assets/s-social.svg" alt="">
               <span>Share to social media</span>
-              <img style='visibility: hidden;' class='check' id='checked-social' src="/assets/v.svg" alt="">
+              <img style='visibility: hidden;' class='check' id='checked-social' src="assets/v.svg" alt="">
             </div>
             <div onclick="activeCheckedIcon(2)">
-              <img src="/assets/s-gallery.svg" alt="">
+              <img src="assets/s-gallery.svg" alt="">
               <span>Share to gallery</span>
-              <img style='visibility: hidden;' class='check' id='checked-gallery' src="/assets/v.svg" alt="">
+              <img style='visibility: hidden;' class='check' id='checked-gallery' src="assets/v.svg" alt="">
             </div>
           </div>
           <div class="btn-block">
@@ -369,10 +369,10 @@
         <div class="ar-again">Again</div>
         </div> -->
     <!-- web ar controll scripts START -->
-    <script src="/libs/gifjs/dist/gif.js"></script>
-    <script src="/main.js"></script>
-    <script src="/controll.js"></script>
-    <script src="/sticker.js"></script>
+    <script src="libs/gifjs/dist/gif.js"></script>
+    <script src="main.js"></script>
+    <script src="controll.js"></script>
+    <script src="sticker.js"></script>
     <!-- web ar controll scripts END -->
   </body>
 </html>

@@ -77,10 +77,10 @@ const currentFrame = {
 const FRAME_COMBINATION = [
   { models: ['Goggle_Red', 'Text3D', 'Coat'] },
   { models: ['Goggle_Red', 'Mask'] },
-  { models: ['Goggle_Red'] },
-  { models: ['Goggle_Blue','Text3D_Blue']},
-  { models: ['Goggle_Orange','Text3D_Orange'] },
-  { models: ['Goggle_Purple','Text3D_Purple']} 
+  { models: ['Goggle_Red', 'Coat'] },
+  { models: ['Goggle_Blue','Text3D_Blue', 'Coat']},
+  { models: ['Goggle_Orange','Text3D_Orange', 'Coat'] },
+  { models: ['Goggle_Purple','Text3D_Purple', 'Coat']} 
 ];
 
 function GO_LOADING() {
