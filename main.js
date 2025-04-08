@@ -319,9 +319,9 @@ $(document).ready(function () {
   hide(SHUTTER);
   hide(document.getElementById('switch_gif_wrapper'));
 
-  if (!payload.token) {
-    window.location.href = 'https://www.fun4lab.com';
-  }
+  // if (!payload.token) {
+  //   window.location.href = 'https://www.fun4lab.com';
+  // }
 });
 
 function nextStep() {
